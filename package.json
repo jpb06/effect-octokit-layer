@@ -1,7 +1,7 @@
 {
   "repository": "https://github.com/jpb06/effect-octokit-layer.git",
   "name": "effect-octokit-layer",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "jpb06 <jp.bois.06@outlook.fr>",
   "description": "Github Octokit layer for effect",
   "license": "MIT",
