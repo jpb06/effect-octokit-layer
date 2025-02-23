@@ -1,0 +1,74 @@
+{
+  "repository": "https://github.com/jpb06/effect-octokit-layer.git",
+  "name": "effect-octokit-layer",
+  "version": "1.0.0",
+  "author": "jpb06 <jp.bois.06@outlook.fr>",
+  "description": "Github Octokit layer for effect",
+  "license": "MIT",
+  "keywords": [
+    "effect",
+    "github",
+    "octokit"
+  ],
+  "main": "./cjs/index.js",
+  "module": "./esm/index.js",
+  "types": "./dts/index.ts",
+  "type": "module",
+  "exports": {
+    ".": {
+      "require": {
+        "types": "./dts/index.d.ts",
+        "default": "./cjs/index.js"
+      },
+      "import": {
+        "types": "./dts/index.d.ts",
+        "default": "./esm/index.js"
+      }
+    }
+  },
+  "engines": {
+    "node": ">=20.x"
+  },
+  "scripts": {
+    "update-deps": "bunx npm-check-updates --root --format group -i",
+    "copy-package": "copyfiles package.json ./dist/",
+    "copy-readme": "copyfiles README.md ./dist/",
+    "build": "del-cli ./dist && bun build-esm && bun build-cjs",
+    "build-esm": "tsc --project tsconfig.esm.json",
+    "build-cjs": "tsc --project tsconfig.cjs.json",
+    "postbuild-cjs": "echo '{\"type\": \"commonjs\"}' > dist/cjs/package.json",
+    "postbuild-esm": "echo '{\"type\": \"module\"}' > dist/esm/package.json",
+    "postbuild": "bun run copy-package && bun run copy-readme && bun resolve-ts-paths-esm",
+    "type-check": "tsc --noEmit",
+    "format": "biome format --write ./src",
+    "format-ci": "biome format ./src",
+    "lint": "biome lint ./src",
+    "lint-fix": "biome lint --write ./src",
+    "test": "vitest",
+    "test-ci": "vitest --coverage --run",
+    "test-dev": "vitest --coverage",
+    "test-coverage": "vitest run --coverage",
+    "sync-icons": "bun generateReadmeIcons -h 50"
+  },
+  "dependencies": {
+    "@octokit/core": "6.1.4",
+    "effect": "3.13.2",
+    "picocolors": "1.1.1"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "@types/bun": "latest",
+    "@types/node": "22.13.5",
+    "@vitest/coverage-v8": "3.0.6",
+    "copyfiles": "2.4.1",
+    "del-cli": "6.0.0",
+    "effect-errors": "1.8.37",
+    "npm-check-updates": "17.1.15",
+    "readme-package-icons": "1.2.0",
+    "ts-paths-resolver": "1.2.32",
+    "typescript": "5.7.3",
+    "vite-tsconfig-paths": "5.1.4",
+    "vitest": "3.0.6",
+    "vitest-mock-extended": "3.0.1"
+  }
+}
