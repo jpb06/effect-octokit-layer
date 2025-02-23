@@ -1,0 +1,54 @@
+{
+	"exclude": ["./vite.config.mts"],
+	"compilerOptions": {
+		// Enable latest features
+		"lib": ["ES2023", "ES2023.Array", "DOM", "DOM.Iterable"],
+		"types": ["node"],
+		"target": "ESNext",
+		"module": "NodeNext",
+		"moduleDetection": "force",
+		"allowJs": false,
+		"incremental": false,
+		"composite": false,
+		"moduleResolution": "NodeNext",
+		"noEmit": true,
+
+		// Best practices
+		"strict": true,
+		"skipLibCheck": true,
+		"noFallthroughCasesInSwitch": true,
+		"downlevelIteration": true,
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"forceConsistentCasingInFileNames": true,
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"noImplicitReturns": false,
+		"noUnusedLocals": true,
+		"noUnusedParameters": false,
+		"noEmitOnError": false,
+		"noErrorTruncation": false,
+		"noImplicitAny": true,
+		"noImplicitThis": true,
+		"noUncheckedIndexedAccess": false,
+		"strictNullChecks": true,
+		"exactOptionalPropertyTypes": true,
+		"noPropertyAccessFromIndexSignature": false,
+
+		// alias
+		"rootDir": "./src",
+		"paths": {
+			"@constants": ["./src/layer/github/implementation/constants/index.ts"],
+			"@implementation": ["./src/layer/github/implementation/index.ts"],
+			"@errors": ["./src/layer/errors/index.ts"],
+			"@provider": ["./src/layer/providers/github-source-analysis.provider.ts"],
+			"@schedules": ["./src/layer/schedules/index.ts"],
+			"@types": ["./src/types/index.ts"],
+			"@util": ["./src/util/index.ts"],
+			"@tests/assertions": ["./src/tests/assertions/index.ts"],
+			"@tests/effects": ["./src/tests/effects/index.ts"],
+			"@tests/mock-data": ["./src/tests/mock-data/index.ts"],
+			"@tests/mocks": ["./src/tests/mocks/index.ts"]
+		}
+	}
+}
