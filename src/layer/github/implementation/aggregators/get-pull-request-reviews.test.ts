@@ -2,15 +2,13 @@ import { Effect, pipe } from 'effect';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { GithubApiError } from '@errors';
+import { makeLoggerTestLayer } from '@tests/layers';
 import { mockData, octokitRequestResponseHeaders } from '@tests/mock-data';
-import { mockConsole, octokitMock } from '@tests/mocks';
+import { octokitMock } from '@tests/mocks';
 
 import type { GetPullRequestReviewsArgs } from './get-pull-request-reviews.js';
 
 vi.mock('@octokit/core');
-mockConsole({
-  warn: vi.fn(),
-});
 
 describe('getPullRequestReviews effect', () => {
   const args: GetPullRequestReviewsArgs = {
@@ -30,12 +28,17 @@ describe('getPullRequestReviews effect', () => {
       data: mockData,
       ...octokitRequestResponseHeaders(count),
     });
+    const { LoggerTestLayer } = makeLoggerTestLayer({});
 
     const { getPullRequestReviews } = await import(
       './get-pull-request-reviews.js'
     );
 
-    const result = await Effect.runPromise(getPullRequestReviews(args));
+    const task = pipe(
+      getPullRequestReviews(args),
+      Effect.provide(LoggerTestLayer),
+    );
+    const result = await Effect.runPromise(task);
 
     expect(result).toStrictEqual(Array(count).fill(mockData).flat());
     expect(mock).toHaveBeenCalledTimes(count);
@@ -46,12 +49,17 @@ describe('getPullRequestReviews effect', () => {
       data: mockData,
       headers: {},
     });
+    const { LoggerTestLayer } = makeLoggerTestLayer({});
 
     const { getPullRequestReviews } = await import(
       './get-pull-request-reviews.js'
     );
 
-    const result = await Effect.runPromise(getPullRequestReviews(args));
+    const task = pipe(
+      getPullRequestReviews(args),
+      Effect.provide(LoggerTestLayer),
+    );
+    const result = await Effect.runPromise(task);
 
     expect(result).toStrictEqual(mockData);
     expect(mock).toHaveBeenCalledTimes(1);
@@ -65,14 +73,18 @@ describe('getPullRequestReviews effect', () => {
         ...octokitRequestResponseHeaders(3),
       },
     );
+    const { LoggerTestLayer } = makeLoggerTestLayer({});
 
     const { getPullRequestReviews } = await import(
       './get-pull-request-reviews.js'
     );
 
-    const result = await Effect.runPromise(
-      pipe(getPullRequestReviews(args), Effect.flip),
+    const task = pipe(
+      getPullRequestReviews(args),
+      Effect.flip,
+      Effect.provide(LoggerTestLayer),
     );
+    const result = await Effect.runPromise(task);
 
     expect(result).toBeInstanceOf(GithubApiError);
   });

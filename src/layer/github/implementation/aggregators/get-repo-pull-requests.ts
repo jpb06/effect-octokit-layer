@@ -1,4 +1,4 @@
-import { Effect } from 'effect';
+import { Effect, pipe } from 'effect';
 
 import type { EffectResultSuccess } from '@types';
 import { getAllPages } from '../generic/get-all-pages.effect.js';
@@ -17,9 +17,12 @@ const getPage = (args: GetRepoPullRequestsArgs) => (page: number) =>
   });
 
 export const getRepoPullRequests = (args: GetRepoPullRequestsArgs) =>
-  Effect.withSpan('get-repo-pull-requests', {
-    attributes: { ...args },
-  })(getAllPages(getPage, args));
+  pipe(
+    getAllPages(getPage, args),
+    Effect.withSpan('get-repo-pull-requests', {
+      attributes: { ...args },
+    }),
+  );
 
 export type RepoPullRequestsResult = EffectResultSuccess<
   typeof getRepoPullRequests

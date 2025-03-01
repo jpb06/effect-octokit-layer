@@ -1,4 +1,6 @@
 export * from './aggregators/get-pull-request-reviews.js';
+export * from './aggregators/get-pull-request-comments.js';
+export * from './aggregators/get-pull-request-review-comments.js';
 export * from './aggregators/get-repo-issues.js';
 export * from './aggregators/get-repo-pull-requests.js';
 export * from './aggregators/get-repositories.js';

@@ -1,4 +1,4 @@
-import { Effect } from 'effect';
+import { Effect, pipe } from 'effect';
 
 import type { EffectResultSuccess } from '@types';
 import { getAllPages } from '../generic/get-all-pages.effect.js';
@@ -16,8 +16,11 @@ const getPage = (args: GetUserEventsArgs) => (page: number) =>
   });
 
 export const getUserEvents = (args: GetUserEventsArgs) =>
-  Effect.withSpan('get-user-events', {
-    attributes: { ...args },
-  })(getAllPages(getPage, args));
+  pipe(
+    getAllPages(getPage, args),
+    Effect.withSpan('get-user-events', {
+      attributes: { ...args },
+    }),
+  );
 
 export type UserEventsResult = EffectResultSuccess<typeof getUserEvents>;

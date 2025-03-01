@@ -1,22 +1,20 @@
 import { Duration, Effect, pipe } from 'effect';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { retryWarningMessage } from '@constants';
 import { ApiRateLimitError, GithubApiError } from '@errors';
-import { expectApiRateLimitMessages } from '@tests/assertions';
 import { delayEffect, delayEffectAndFlip } from '@tests/effects';
+import { makeLoggerTestLayer } from '@tests/layers';
 import {
   mockData,
   octokitRequestErrorWithRetryAfter,
   octokitRequestResponseHeaders,
 } from '@tests/mock-data';
-import { mockConsole, octokitMock } from '@tests/mocks';
+import { octokitMock } from '@tests/mocks';
 
 import type { GetRepoIssuesPageArgs } from './get-repo-issues-page.js';
 
 vi.mock('@octokit/core');
-mockConsole({
-  warn: vi.fn(),
-});
 
 describe('getRepoIssuesPage effect', () => {
   const args: GetRepoIssuesPageArgs = {
@@ -35,10 +33,12 @@ describe('getRepoIssuesPage effect', () => {
       data: mockData,
       ...octokitRequestResponseHeaders(25),
     });
+    const { LoggerTestLayer } = makeLoggerTestLayer({});
 
     const { getRepoIssuesPage } = await import('./get-repo-issues-page.js');
 
-    const result = await Effect.runPromise(getRepoIssuesPage(args));
+    const task = pipe(getRepoIssuesPage(args), Effect.provide(LoggerTestLayer));
+    const result = await Effect.runPromise(task);
 
     expect(result.data).toStrictEqual(mockData);
     expect(result.links).toStrictEqual({ next: 2, last: 25 });
@@ -46,12 +46,16 @@ describe('getRepoIssuesPage effect', () => {
 
   it('should fail with an Octokit request error', async () => {
     await octokitMock.requestFail(new GithubApiError({ cause: 'Oh no' }));
+    const { LoggerTestLayer } = makeLoggerTestLayer({});
 
     const { getRepoIssuesPage } = await import('./get-repo-issues-page.js');
 
-    const result = await Effect.runPromise(
-      pipe(getRepoIssuesPage(args), Effect.flip),
+    const task = pipe(
+      getRepoIssuesPage(args),
+      Effect.flip,
+      Effect.provide(LoggerTestLayer),
     );
+    const result = await Effect.runPromise(task);
 
     expect(result).toBeInstanceOf(GithubApiError);
   });
@@ -60,17 +64,20 @@ describe('getRepoIssuesPage effect', () => {
     const retryDelay = 20;
     const error = octokitRequestErrorWithRetryAfter(retryDelay);
     await octokitMock.requestFail(error);
+    const { LoggerTestLayer, warnMock } = makeLoggerTestLayer({});
 
     const { getRepoIssuesPage } = await import('./get-repo-issues-page.js');
 
-    const effect = delayEffectAndFlip(
-      getRepoIssuesPage(args),
-      Duration.seconds(40),
-    );
+    const task = pipe(getRepoIssuesPage(args), Effect.provide(LoggerTestLayer));
+    const effect = delayEffectAndFlip(task, Duration.seconds(40));
     const result = await Effect.runPromise(effect);
 
     expect(result).toBeInstanceOf(ApiRateLimitError);
-    expectApiRateLimitMessages(error, retryDelay);
+    expect(warnMock).toHaveBeenCalledTimes(2);
+
+    const warnMessage = retryWarningMessage('/user', retryDelay);
+    expect(warnMock).toHaveBeenNthCalledWith(1, warnMessage);
+    expect(warnMock).toHaveBeenNthCalledWith(2, warnMessage);
   });
 
   it('should retry one time and then succeed', async () => {
@@ -80,13 +87,15 @@ describe('getRepoIssuesPage effect', () => {
       data: mockData,
       ...octokitRequestResponseHeaders(25),
     });
+    const { LoggerTestLayer, warnMock } = makeLoggerTestLayer({});
 
     const { getRepoIssuesPage } = await import('./get-repo-issues-page.js');
 
-    const effect = delayEffect(getRepoIssuesPage(args), Duration.seconds(40));
+    const task = pipe(getRepoIssuesPage(args), Effect.provide(LoggerTestLayer));
+    const effect = delayEffect(task, Duration.seconds(40));
     const result = await Effect.runPromise(effect);
 
-    expect(console.warn).toHaveBeenCalledTimes(1);
+    expect(warnMock).toHaveBeenCalledTimes(1);
     expect(result.data).toStrictEqual(mockData);
     expect(result.links).toStrictEqual({ next: 2, last: 25 });
   });

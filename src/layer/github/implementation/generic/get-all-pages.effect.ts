@@ -1,18 +1,19 @@
 import { Effect } from 'effect';
 
 import { defaultConcurrency } from '@constants';
+import type { Logger } from '@dependencies/logger';
 import { arrayRange } from '@util';
 
-type LinkKey = 'prev' | 'next' | 'last';
+import type { Link } from './get-one-page/logic/index.js';
 
 interface DataWithLinks<TData> {
-  links: Record<LinkKey, number | undefined> | undefined;
+  links: Link | undefined;
   data: TData;
 }
 
 type GetPage<TArgs, TData, TError> = (
   args: TArgs,
-) => (page: number) => Effect.Effect<DataWithLinks<TData>, TError>;
+) => (page: number) => Effect.Effect<DataWithLinks<TData>, TError, Logger>;
 
 export const getAllPages = <
   TError,

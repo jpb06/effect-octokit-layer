@@ -1,20 +1,18 @@
 import { Duration, Effect, pipe } from 'effect';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { retryWarningMessage } from '@constants';
 import { ApiRateLimitError, GithubApiError } from '@errors';
-import { expectApiRateLimitMessages } from '@tests/assertions';
 import { delayEffect, delayEffectAndFlip } from '@tests/effects';
+import { makeLoggerTestLayer } from '@tests/layers';
 import {
   mockData,
   octokitRequestErrorWithRetryAfter,
   octokitRequestResponseHeaders,
 } from '@tests/mock-data';
-import { mockConsole, octokitMock } from '@tests/mocks';
+import { octokitMock } from '@tests/mocks';
 
 vi.mock('@octokit/core');
-mockConsole({
-  warn: vi.fn(),
-});
 
 describe('getUserOrgs effect', () => {
   const username = 'yolo';
@@ -28,22 +26,28 @@ describe('getUserOrgs effect', () => {
     octokitMock.requestOnce({
       data: mockData,
     });
+    const { LoggerTestLayer } = makeLoggerTestLayer({});
 
     const { getUserOrgs } = await import('./get-user-orgs.js');
 
-    const result = await Effect.runPromise(getUserOrgs(username));
+    const task = pipe(getUserOrgs(username), Effect.provide(LoggerTestLayer));
+    const result = await Effect.runPromise(task);
 
     expect(result).toStrictEqual(mockData);
   });
 
   it('should fail with an Octokit request error', async () => {
     octokitMock.requestFail(new GithubApiError({ cause: 'Oh no' }));
+    const { LoggerTestLayer } = makeLoggerTestLayer({});
 
     const { getUserOrgs } = await import('./get-user-orgs.js');
 
-    const result = await Effect.runPromise(
-      pipe(getUserOrgs(username), Effect.flip),
+    const task = pipe(
+      getUserOrgs(username),
+      Effect.flip,
+      Effect.provide(LoggerTestLayer),
     );
+    const result = await Effect.runPromise(task);
 
     expect(result).toBeInstanceOf(GithubApiError);
   });
@@ -52,17 +56,20 @@ describe('getUserOrgs effect', () => {
     const retryDelay = 20;
     const error = octokitRequestErrorWithRetryAfter(retryDelay);
     await octokitMock.requestFail(error);
+    const { LoggerTestLayer, warnMock } = makeLoggerTestLayer({});
 
     const { getUserOrgs } = await import('./get-user-orgs.js');
 
-    const effect = delayEffectAndFlip(
-      getUserOrgs(username),
-      Duration.seconds(80),
-    );
+    const task = pipe(getUserOrgs(username), Effect.provide(LoggerTestLayer));
+    const effect = delayEffectAndFlip(task, Duration.seconds(80));
     const result = await Effect.runPromise(effect);
 
     expect(result).toBeInstanceOf(ApiRateLimitError);
-    expectApiRateLimitMessages(error, retryDelay);
+    expect(warnMock).toHaveBeenCalledTimes(2);
+
+    const warnMessage = retryWarningMessage('/user', retryDelay);
+    expect(warnMock).toHaveBeenNthCalledWith(1, warnMessage);
+    expect(warnMock).toHaveBeenNthCalledWith(2, warnMessage);
   });
 
   it('should retry one time and then succeed', async () => {
@@ -72,12 +79,15 @@ describe('getUserOrgs effect', () => {
       data: mockData,
       ...octokitRequestResponseHeaders(25),
     });
+    const { LoggerTestLayer, warnMock } = makeLoggerTestLayer({});
 
     const { getUserOrgs } = await import('./get-user-orgs.js');
-    const effect = delayEffect(getUserOrgs(username), Duration.seconds(40));
+
+    const task = pipe(getUserOrgs(username), Effect.provide(LoggerTestLayer));
+    const effect = delayEffect(task, Duration.seconds(40));
     const result = await Effect.runPromise(effect);
 
-    expect(console.warn).toHaveBeenCalledTimes(1);
+    expect(warnMock).toHaveBeenCalledTimes(1);
     expect(result).toStrictEqual(mockData);
   });
 });
