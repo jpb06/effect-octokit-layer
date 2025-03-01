@@ -34,10 +34,42 @@ GITHUB_TOKEN="my-github-token"
 
 ## ⚡ Layer Api
 
+### 🔶 Layer functions Types
+
+The layer exposes functions with the following type:
+
+```ts
+import type { ConfigError, Effect } from 'effect';
+
+type LayerErrors = GithubApiError | ApiRateLimitError | ConfigError.ConfigError;
+type LoggerLayer = {
+  warn: (
+    message?: unknown,
+    ...optionalParams: unknown[]
+  ) => Effect.Effect<void>;
+};
+
+type LayerFunction<TArgs, TResult> = (
+  args: TArgs
+) => Effect<TResult, LayerErrors, LoggerLayer>;
+```
+
+For example, getting user profile can be done with this function:
+
+```ts
+type GetUserProfile = (
+  username: string
+) => Effect<UserProfileResult, LayerErrors, Logger>;
+```
+
 ### 🔶 Users
 
 ```typescript
-import { OctokitLayer, OctokitLayerLive } from 'effect-octokit-layer';
+import {
+  OctokitLayer,
+  OctokitLayerLive,
+  LoggerConsoleLive,
+} from 'effect-octokit-layer';
 
 const username = 'jpb06';
 
@@ -57,7 +89,7 @@ const [profile, repos, orgs, events] = await Effect.runPromise(
       // Fetch all these in parallel
       { concurrency: 'unbounded' }
     ),
-    Effect.provide(OctokitLayerLive)
+    Effect.provide(Layer.mergeAll(OctokitLayerLive, LoggerConsoleLive))
   )
 );
 ```
@@ -65,13 +97,17 @@ const [profile, repos, orgs, events] = await Effect.runPromise(
 ### 🔶 Organizations
 
 ```typescript
-import { OctokitLayer, OctokitLayerLive } from 'effect-octokit-layer';
+import {
+  OctokitLayer,
+  OctokitLayerLive,
+  LoggerConsoleLive,
+} from 'effect-octokit-layer';
 
 const orgs = await Effect.runPromise(
   pipe(
     // Get organization repos
     OctokitLayer.org('my-org').repos(),
-    Effect.provide(OctokitLayerLive)
+    Effect.provide(Layer.mergeAll(OctokitLayerLive, LoggerConsoleLive))
   )
 );
 ```
@@ -79,35 +115,95 @@ const orgs = await Effect.runPromise(
 ### 🔶 Repositories
 
 ```typescript
-import { RepoArgs, OctokitLayer, OctokitLayerLive } from 'effect-octokit-layer';
+import {
+  RepoArgs,
+  OctokitLayer,
+  OctokitLayerLive,
+  LoggerConsoleLive,
+} from 'effect-octokit-layer';
 
 const reactRepo: RepoArgs = {
   owner: 'facebook',
   name: 'react',
 };
 
-const [issues, pulls, issue34, pull5453, pull5453Reviews] =
-  await Effect.runPromise(
-    pipe(
-      Effect.all(
-        [
-          // Get all issues
-          OctokitLayer.repo(reactRepo).issues(),
-          // Get all pull requests
-          OctokitLayer.repo(reactRepo).pulls(),
-          // Get issue #34
-          OctokitLayer.repo(reactRepo).issue(34),
-          // Get pull request #5453 data
-          OctokitLayer.repo(reactRepo).pull(5453).details(),
-          // Get pull request #5453 reviews
-          OctokitLayer.repo(reactRepo).pull(5453).reviews(),
-        ],
-        // Fetch all these in parallel
-        { concurrency: 'unbounded' }
-      ),
-      Effect.provide(OctokitLayerLive)
-    )
-  );
+const [issues, pulls, issue34] = await Effect.runPromise(
+  pipe(
+    Effect.all(
+      [
+        // Get all issues
+        OctokitLayer.repo(reactRepo).issues(),
+        // Get all pull requests
+        OctokitLayer.repo(reactRepo).pulls(),
+        // Get issue #34
+        OctokitLayer.repo(reactRepo).issue(34),
+      ],
+      // Fetch all these in parallel
+      { concurrency: 'unbounded' }
+    ),
+    Effect.provide(Layer.mergeAll(OctokitLayerLive, LoggerConsoleLive))
+  )
+);
+```
+
+### 🔶 Pull requests
+
+```typescript
+import {
+  RepoArgs,
+  OctokitLayer,
+  OctokitLayerLive,
+  LoggerConsoleLive,
+} from 'effect-octokit-layer';
+
+const reactRepo: RepoArgs = {
+  owner: 'facebook',
+  name: 'react',
+};
+const pull = repo.pull(39);
+
+const [details, reviews, comments] = await Effect.runPromise(
+  pipe(
+    Effect.all(
+      [
+        // Pull request details
+        pull.details(),
+        // Pull request #39 reviews
+        pull.reviews(),
+        // All the comments made on the pull request #39
+        pull.comments(),
+      ],
+      { concurrency: 'unbounded' }
+    ),
+    Effect.provide(Layer.mergeAll(OctokitLayerLive, LoggerConsoleLive))
+  )
+);
+```
+
+### 🔶 Pull request reviews
+
+```typescript
+import {
+  RepoArgs,
+  OctokitLayer,
+  OctokitLayerLive,
+  LoggerConsoleLive,
+} from 'effect-octokit-layer';
+
+const reactRepo: RepoArgs = {
+  owner: 'facebook',
+  name: 'react',
+};
+const pull = repo.pull(39);
+const review = pull.review(2593339077);
+
+const comments = await Effect.runPromise(
+  pipe(
+    // Review #2593339077 comments
+    review.comments(),
+    Effect.provide(Layer.mergeAll(OctokitLayerLive, LoggerConsoleLive))
+  )
+);
 ```
 
 ### 🔶 Parallelism and resilience

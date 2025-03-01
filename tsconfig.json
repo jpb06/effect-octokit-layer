@@ -39,6 +39,7 @@
 		"rootDir": "./src",
 		"paths": {
 			"@constants": ["./src/layer/github/implementation/constants/index.ts"],
+			"@dependencies/logger": ["./src/dependencies/logger/index.ts"],
 			"@implementation": ["./src/layer/github/implementation/index.ts"],
 			"@errors": ["./src/layer/errors/index.ts"],
 			"@provider": ["./src/layer/providers/github-source-analysis.provider.ts"],
@@ -47,6 +48,7 @@
 			"@util": ["./src/util/index.ts"],
 			"@tests/assertions": ["./src/tests/assertions/index.ts"],
 			"@tests/effects": ["./src/tests/effects/index.ts"],
+			"@tests/layers": ["./src/tests/layers/index.ts"],
 			"@tests/mock-data": ["./src/tests/mock-data/index.ts"],
 			"@tests/mocks": ["./src/tests/mocks/index.ts"]
 		}

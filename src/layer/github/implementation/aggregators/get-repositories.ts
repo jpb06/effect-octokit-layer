@@ -1,4 +1,4 @@
-import { Effect, Match } from 'effect';
+import { Effect, Match, pipe } from 'effect';
 
 import type { EffectResultSuccess } from '@types';
 import { getAllPages } from '../generic/get-all-pages.effect.js';
@@ -31,8 +31,11 @@ const getPage =
     );
 
 export const getRepositories = (args: GetRepositoriesArgs) =>
-  Effect.withSpan('get-repositories', {
-    attributes: { ...args },
-  })(getAllPages(getPage, args));
+  pipe(
+    getAllPages(getPage, args),
+    Effect.withSpan('get-repositories', {
+      attributes: { ...args },
+    }),
+  );
 
 export type RepositoriesResult = EffectResultSuccess<typeof getRepositories>;

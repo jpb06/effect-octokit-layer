@@ -6,13 +6,16 @@ import { makeLoggerTestLayer } from '@tests/layers';
 import { mockData, octokitRequestResponseHeaders } from '@tests/mock-data';
 import { octokitMock } from '@tests/mocks';
 
-import type { GetUserEventsArgs } from './get-user-events.js';
+import type { GetPullRequestReviewCommentsArgs } from './get-pull-request-review-comments.js';
 
 vi.mock('@octokit/core');
 
-describe('getUserEvents effect', () => {
-  const args: GetUserEventsArgs = {
-    username: 'cool',
+describe('getPullRequestReviewComments effect', () => {
+  const args: GetPullRequestReviewCommentsArgs = {
+    owner: 'cool',
+    repo: 'yolo',
+    pullNumber: 1,
+    reviewId: 1,
   };
 
   beforeEach(() => {
@@ -28,9 +31,14 @@ describe('getUserEvents effect', () => {
     });
     const { LoggerTestLayer } = makeLoggerTestLayer({});
 
-    const { getUserEvents } = await import('./get-user-events.js');
+    const { getPullRequestReviewComments } = await import(
+      './get-pull-request-review-comments.js'
+    );
 
-    const task = pipe(getUserEvents(args), Effect.provide(LoggerTestLayer));
+    const task = pipe(
+      getPullRequestReviewComments(args),
+      Effect.provide(LoggerTestLayer),
+    );
     const result = await Effect.runPromise(task);
 
     expect(result).toStrictEqual(Array(count).fill(mockData).flat());
@@ -44,9 +52,14 @@ describe('getUserEvents effect', () => {
     });
     const { LoggerTestLayer } = makeLoggerTestLayer({});
 
-    const { getUserEvents } = await import('./get-user-events.js');
+    const { getPullRequestReviewComments } = await import(
+      './get-pull-request-review-comments.js'
+    );
 
-    const task = pipe(getUserEvents(args), Effect.provide(LoggerTestLayer));
+    const task = pipe(
+      getPullRequestReviewComments(args),
+      Effect.provide(LoggerTestLayer),
+    );
     const result = await Effect.runPromise(task);
 
     expect(result).toStrictEqual(mockData);
@@ -63,10 +76,12 @@ describe('getUserEvents effect', () => {
     );
     const { LoggerTestLayer } = makeLoggerTestLayer({});
 
-    const { getUserEvents } = await import('./get-user-events.js');
+    const { getPullRequestReviewComments } = await import(
+      './get-pull-request-review-comments.js'
+    );
 
     const task = pipe(
-      getUserEvents(args),
+      getPullRequestReviewComments(args),
       Effect.flip,
       Effect.provide(LoggerTestLayer),
     );

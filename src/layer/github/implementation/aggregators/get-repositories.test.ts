@@ -2,15 +2,13 @@ import { Effect, pipe } from 'effect';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { GithubApiError } from '@errors';
+import { makeLoggerTestLayer } from '@tests/layers';
 import { mockData, octokitRequestResponseHeaders } from '@tests/mock-data';
-import { mockConsole, octokitMock } from '@tests/mocks';
+import { octokitMock } from '@tests/mocks';
 
 import type { GetRepositoriesArgs } from './get-repositories.js';
 
 vi.mock('@octokit/core');
-mockConsole({
-  warn: vi.fn(),
-});
 
 describe('getRepositories effect', () => {
   const args: GetRepositoriesArgs = {
@@ -29,10 +27,12 @@ describe('getRepositories effect', () => {
       data: mockData,
       ...octokitRequestResponseHeaders(count),
     });
+    const { LoggerTestLayer } = makeLoggerTestLayer({});
 
     const { getRepositories } = await import('./get-repositories.js');
 
-    const result = await Effect.runPromise(getRepositories(args));
+    const task = pipe(getRepositories(args), Effect.provide(LoggerTestLayer));
+    const result = await Effect.runPromise(task);
 
     expect(result).toStrictEqual(Array(count).fill(mockData).flat());
     expect(mock).toHaveBeenCalledTimes(count);
@@ -44,12 +44,15 @@ describe('getRepositories effect', () => {
       data: mockData,
       ...octokitRequestResponseHeaders(count),
     });
+    const { LoggerTestLayer } = makeLoggerTestLayer({});
 
     const { getRepositories } = await import('./get-repositories.js');
 
-    const result = await Effect.runPromise(
+    const task = pipe(
       getRepositories({ ...args, type: 'org' }),
+      Effect.provide(LoggerTestLayer),
     );
+    const result = await Effect.runPromise(task);
 
     expect(result).toStrictEqual(Array(count).fill(mockData).flat());
     expect(mock).toHaveBeenCalledTimes(count);
@@ -60,10 +63,12 @@ describe('getRepositories effect', () => {
       data: mockData,
       headers: {},
     });
+    const { LoggerTestLayer } = makeLoggerTestLayer({});
 
     const { getRepositories } = await import('./get-repositories.js');
 
-    const result = await Effect.runPromise(getRepositories(args));
+    const task = pipe(getRepositories(args), Effect.provide(LoggerTestLayer));
+    const result = await Effect.runPromise(task);
 
     expect(result).toStrictEqual(mockData);
     expect(mock).toHaveBeenCalledTimes(1);
@@ -77,12 +82,16 @@ describe('getRepositories effect', () => {
         ...octokitRequestResponseHeaders(3),
       },
     );
+    const { LoggerTestLayer } = makeLoggerTestLayer({});
 
     const { getRepositories } = await import('./get-repositories.js');
 
-    const result = await Effect.runPromise(
-      pipe(getRepositories(args), Effect.flip),
+    const task = pipe(
+      getRepositories(args),
+      Effect.flip,
+      Effect.provide(LoggerTestLayer),
     );
+    const result = await Effect.runPromise(task);
 
     expect(result).toBeInstanceOf(GithubApiError);
   });

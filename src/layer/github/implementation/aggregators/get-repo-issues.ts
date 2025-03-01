@@ -1,4 +1,4 @@
-import { Effect } from 'effect';
+import { Effect, pipe } from 'effect';
 
 import type { EffectResultSuccess } from '@types';
 
@@ -18,8 +18,11 @@ const getPage = (args: GetRepoIssuesArgs) => (page: number) =>
   });
 
 export const getRepoIssues = (args: GetRepoIssuesArgs) =>
-  Effect.withSpan('get-repo-issues', {
-    attributes: { ...args },
-  })(getAllPages(getPage, args));
+  pipe(
+    getAllPages(getPage, args),
+    Effect.withSpan('get-repo-issues', {
+      attributes: { ...args },
+    }),
+  );
 
 export type RepoIssuesResult = EffectResultSuccess<typeof getRepoIssues>;

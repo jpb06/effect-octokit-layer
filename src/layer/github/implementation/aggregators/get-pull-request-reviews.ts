@@ -1,6 +1,7 @@
-import { Effect } from 'effect';
+import { Effect, pipe } from 'effect';
 
 import type { EffectResultSuccess } from '@types';
+
 import { getAllPages } from '../generic/get-all-pages.effect.js';
 import { getPullRequestReviewsPage } from '../paging/get-pull-request-reviews-page.js';
 
@@ -18,9 +19,12 @@ const getPage = (args: GetPullRequestReviewsArgs) => (page: number) =>
   });
 
 export const getPullRequestReviews = (args: GetPullRequestReviewsArgs) =>
-  Effect.withSpan('get-pull-request-reviews', {
-    attributes: { ...args },
-  })(getAllPages(getPage, args));
+  pipe(
+    getAllPages(getPage, args),
+    Effect.withSpan('get-pull-request-reviews', {
+      attributes: { ...args },
+    }),
+  );
 
 export type PullRequestReviewsResult = EffectResultSuccess<
   typeof getPullRequestReviews

@@ -45,6 +45,27 @@ export const OctokitLayer = {
         tapLayer(Context, ({ getPullRequest }) =>
           getPullRequest({ owner, repo: name, number }),
         ),
+      comments: (concurrency = defaultConcurrency) =>
+        tapLayer(Context, ({ getPullRequestComments }) =>
+          getPullRequestComments({
+            owner,
+            repo: name,
+            pullNumber: number,
+            concurrency,
+          }),
+        ),
+      review: (reviewId: number) => ({
+        comments: (concurrency = defaultConcurrency) =>
+          tapLayer(Context, ({ getPullRequestReviewComments }) =>
+            getPullRequestReviewComments({
+              owner,
+              repo: name,
+              pullNumber: number,
+              reviewId,
+              concurrency,
+            }),
+          ),
+      }),
       reviews: (concurrency = defaultConcurrency) =>
         tapLayer(Context, ({ getPullRequestReviews }) =>
           getPullRequestReviews({
