@@ -10,3 +10,4 @@ export type { RepoArgs };
 
 export * from './types/effect.types.js';
 export * from './layer/errors/github-api.error.js';
+export * from './layer/errors/api-rate-limit.error.js';
