@@ -61,7 +61,7 @@
     "@biomejs/biome": "1.9.4",
     "@types/bun": "latest",
     "@types/node": "22.13.9",
-    "@vitest/coverage-v8": "3.0.7",
+    "@vitest/coverage-v8": "3.0.8",
     "copyfiles": "2.4.1",
     "del-cli": "6.0.0",
     "effect-errors": "1.8.38",
@@ -70,7 +70,7 @@
     "ts-paths-resolver": "1.2.32",
     "typescript": "5.8.2",
     "vite-tsconfig-paths": "5.1.4",
-    "vitest": "3.0.7",
+    "vitest": "3.0.8",
     "vitest-mock-extended": "3.0.1"
   }
 }
