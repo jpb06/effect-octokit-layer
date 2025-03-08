@@ -162,16 +162,27 @@ const reactRepo: RepoArgs = {
 };
 const pull = repo.pull(39);
 
-const [details, reviews, comments] = await Effect.runPromise(
+const [details, comments, reviews, createdReview, deletedReview] = await Effect.runPromise(
   pipe(
     Effect.all(
       [
         // Pull request details
         pull.details(),
-        // Pull request #39 reviews
-        pull.reviews(),
         // All the comments made on the pull request #39
         pull.comments(),
+        // Pull request #39 reviews
+        pull.reviews.get(),
+        // Create a review
+        pull.reviews.create({
+          event: 'REQUEST_CHANGES',
+          body: 'I think some points need to be adressed',
+          comments: [{
+            path: './src/cool.ts',
+            body: "Shouldn't this file be renamed",
+          }],
+        }),
+        // Delete review #2
+        pull.reviews.delete(2);
       ],
       { concurrency: 'unbounded' }
     ),
@@ -180,7 +191,7 @@ const [details, reviews, comments] = await Effect.runPromise(
 );
 ```
 
-### 🔶 Pull request reviews
+### 🔶 Pull request comments
 
 ```typescript
 import {
@@ -197,13 +208,23 @@ const reactRepo: RepoArgs = {
 const pull = repo.pull(39);
 const review = pull.review(2593339077);
 
-const comments = await Effect.runPromise(
-  pipe(
-    // Review #2593339077 comments
-    review.comments(),
-    Effect.provide(Layer.mergeAll(OctokitLayerLive, LoggerConsoleLive))
-  )
-);
+const [details, comments, reviews, createdReview, deletedReview] =
+  await Effect.runPromise(
+    pipe(
+      Effect.all([
+        // Create a comment in review #2593339077 on pull request #39
+        review.comments.create({
+          path: './src',
+          body: 'cool',
+          commitId: 'ff',
+        }),
+        // Get review #2593339077 comments
+        review.comments.get(),
+        // Delete comment #1 in review #2593339077
+        review.comments.delete(1),
+      ])
+    )
+  );
 ```
 
 ### 🔶 Parallelism and resilience

@@ -4,6 +4,10 @@ import { Context } from 'effect';
 import type { Logger } from '@dependencies/logger';
 import type { ApiRateLimitError, GithubApiError } from '@errors';
 import type {
+  CreatePullRequestCommentResult,
+  CreatePullRequestReviewResult,
+  DeletePullRequestCommentResult,
+  DeletePullRequestReviewResult,
   GetIssueArgs,
   GetPullRequestArgs,
   GetPullRequestCommentsArgs,
@@ -13,9 +17,13 @@ import type {
   GetRepositoriesArgs,
   GetUserEventsArgs,
   IssueResult,
+  PullRequestCommentCreationArgs,
+  PullRequestCommentDeletionArgs,
   PullRequestCommentsResult,
   PullRequestResult,
   PullRequestReviewCommentsResult,
+  PullRequestReviewCreationArgs,
+  PullRequestReviewDeletionArgs,
   PullRequestReviewsResult,
   RepoIssuesResult,
   RepoPullRequestsResult,
@@ -61,6 +69,18 @@ export interface Octokit {
   readonly getPullRequestReviewComments: (
     args: GetPullRequestReviewCommentsArgs,
   ) => Effect.Effect<PullRequestReviewCommentsResult, LayerErrors, Logger>;
+  readonly createPullRequestComment: (
+    args: PullRequestCommentCreationArgs,
+  ) => Effect.Effect<CreatePullRequestCommentResult, LayerErrors, Logger>;
+  readonly createPullRequestReview: (
+    args: PullRequestReviewCreationArgs,
+  ) => Effect.Effect<CreatePullRequestReviewResult, LayerErrors, Logger>;
+  readonly deletePullRequestReview: (
+    args: PullRequestReviewDeletionArgs,
+  ) => Effect.Effect<DeletePullRequestReviewResult, LayerErrors, Logger>;
+  readonly deletePullRequestComment: (
+    args: PullRequestCommentDeletionArgs,
+  ) => Effect.Effect<DeletePullRequestCommentResult, LayerErrors, Logger>;
 }
 
 export const OctokitLayerContext = Context.GenericTag<Octokit>('Octokit');

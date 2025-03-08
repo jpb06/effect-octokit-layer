@@ -18,6 +18,7 @@ export default defineConfig({
         'src/tests',
         'src/**/*.type.ts',
         'src/types',
+        'src/layer/api',
         '**/index.ts',
       ],
     },

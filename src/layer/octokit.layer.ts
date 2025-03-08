@@ -1,80 +1,12 @@
-import { defaultConcurrency } from '@constants';
-import { tapLayer } from './effects/tap-layer.effect.js';
-import { OctokitLayerContext as Context } from './octokit.context.js';
+import { orgsApi, repoIssuesApi, repoPullRequestsApi, usersApi } from '@api';
 
-export interface RepoArgs {
-  owner: string;
-  name: string;
-}
+import type { RepoArgs } from './api/repos/types/repo-args.type.js';
 
 export const OctokitLayer = {
-  user: (username: string) => ({
-    profile: () =>
-      tapLayer(Context, ({ getUserProfile }) => getUserProfile(username)),
-    orgs: () => tapLayer(Context, ({ getUserOrgs }) => getUserOrgs(username)),
-    events: (concurrency = defaultConcurrency) =>
-      tapLayer(Context, ({ getUserEvents }) =>
-        getUserEvents({ username, concurrency }),
-      ),
-    repos: (concurrency = defaultConcurrency) =>
-      tapLayer(Context, ({ getRepositories }) =>
-        getRepositories({ target: username, type: 'user', concurrency }),
-      ),
-  }),
-  org: (owner: string) => ({
-    repos: (concurrency = defaultConcurrency) =>
-      tapLayer(Context, ({ getRepositories }) =>
-        getRepositories({ target: owner, type: 'org', concurrency }),
-      ),
-  }),
-  repo: ({ owner, name }: RepoArgs) => ({
-    issues: (concurrency = defaultConcurrency) =>
-      tapLayer(Context, ({ getRepoIssues }) =>
-        getRepoIssues({ owner, repo: name, concurrency }),
-      ),
-    issue: (number: number) =>
-      tapLayer(Context, ({ getIssue }) =>
-        getIssue({ owner, repo: name, number }),
-      ),
-    pulls: (concurrency = defaultConcurrency) =>
-      tapLayer(Context, ({ getRepoPullRequests }) =>
-        getRepoPullRequests({ owner, repo: name, concurrency }),
-      ),
-    pull: (number: number) => ({
-      details: () =>
-        tapLayer(Context, ({ getPullRequest }) =>
-          getPullRequest({ owner, repo: name, number }),
-        ),
-      comments: (concurrency = defaultConcurrency) =>
-        tapLayer(Context, ({ getPullRequestComments }) =>
-          getPullRequestComments({
-            owner,
-            repo: name,
-            pullNumber: number,
-            concurrency,
-          }),
-        ),
-      review: (reviewId: number) => ({
-        comments: (concurrency = defaultConcurrency) =>
-          tapLayer(Context, ({ getPullRequestReviewComments }) =>
-            getPullRequestReviewComments({
-              owner,
-              repo: name,
-              pullNumber: number,
-              reviewId,
-              concurrency,
-            }),
-          ),
-      }),
-      reviews: (concurrency = defaultConcurrency) =>
-        tapLayer(Context, ({ getPullRequestReviews }) =>
-          getPullRequestReviews({
-            owner,
-            repo: name,
-            pullNumber: number,
-            concurrency,
-          }),
-        ),
-    }),
+  user: usersApi,
+  org: orgsApi,
+  repo: (args: RepoArgs) => ({
+    ...repoIssuesApi(args),
+    ...repoPullRequestsApi(args),
   }),
 };
