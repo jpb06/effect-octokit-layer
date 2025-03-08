@@ -22,6 +22,11 @@ export const handleOctokitRequestError = (
         retryAfter: response.headers['retry-after'],
         requestUrl: request.url.replace('https://api.github.com', ''),
       })),
-      Effect.catchAll((e) => Effect.succeed(new GithubApiError({ cause: e }))),
+      Effect.catchTag('ParseError', () => {
+        if (error instanceof Error) {
+          return Effect.succeed(new GithubApiError({ cause: error.message }));
+        }
+        return Effect.succeed(new GithubApiError({ cause: error }));
+      }),
     ),
   );

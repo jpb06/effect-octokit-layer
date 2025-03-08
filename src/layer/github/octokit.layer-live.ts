@@ -1,6 +1,10 @@
 import { Layer } from 'effect';
 
 import {
+  createPullRequestComment,
+  createPullRequestReview,
+  deletePullRequestComment,
+  deletePullRequestReview,
   getIssue,
   getPullRequest,
   getPullRequestComments,
@@ -30,5 +34,9 @@ export const OctokitLayerLive = Layer.succeed(
     getPullRequestReviews,
     getPullRequestComments,
     getPullRequestReviewComments,
+    createPullRequestComment,
+    createPullRequestReview,
+    deletePullRequestReview,
+    deletePullRequestComment,
   }),
 );

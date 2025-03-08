@@ -10,3 +10,8 @@ export * from './primitives/get-issue.js';
 export * from './primitives/get-pull-request.js';
 export * from './primitives/get-user-orgs.js';
 export * from './primitives/get-user-profile.js';
+
+export * from './primitives/create-pull-request-comment.js';
+export * from './primitives/delete-pull-request-comment.js';
+export * from './primitives/create-pull-request-review.js';
+export * from './primitives/delete-pull-request-review.js';

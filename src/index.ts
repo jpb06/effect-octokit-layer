@@ -1,7 +1,7 @@
 import { Logger, LoggerConsoleLive } from '@dependencies/logger';
 
+import type { RepoArgs } from './layer/api/repos/types/repo-args.type.js';
 import { OctokitLayerLive } from './layer/github/octokit.layer-live.js';
-import type { RepoArgs } from './layer/octokit.layer.js';
 import { OctokitLayer } from './layer/octokit.layer.js';
 
 export { OctokitLayer, OctokitLayerLive };
