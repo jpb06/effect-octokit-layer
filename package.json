@@ -54,8 +54,10 @@
   },
   "dependencies": {
     "@octokit/core": "6.1.4",
-    "effect": "3.13.7",
     "picocolors": "1.1.1"
+  },
+  "peerDependencies": {
+    "effect": "3.13.7"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
