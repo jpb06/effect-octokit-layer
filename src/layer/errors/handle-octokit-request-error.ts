@@ -1,4 +1,4 @@
-import { Schema } from '@effect/schema';
+import { Schema } from 'effect';
 import { Effect, pipe } from 'effect';
 
 import { GithubApiError } from './index.js';
