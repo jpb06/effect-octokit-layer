@@ -67,7 +67,7 @@
     "copyfiles": "2.4.1",
     "del-cli": "6.0.0",
     "effect-errors": "1.8.45",
-    "npm-check-updates": "17.1.15",
+    "npm-check-updates": "17.1.16",
     "readme-package-icons": "1.2.0",
     "ts-paths-resolver": "1.2.41",
     "typescript": "5.8.2",
