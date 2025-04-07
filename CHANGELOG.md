@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.4](https://github.com/jpb06/effect-octokit-layer/compare/v1.3.3...v1.3.4) (2025-04-07)
+
+
+### Bug Fixes
+
+* **deps:** update dependency effect to v3.14.6 ([#29](https://github.com/jpb06/effect-octokit-layer/issues/29)) ([f64be0d](https://github.com/jpb06/effect-octokit-layer/commit/f64be0d1bd730bea1fe795c113c9dc48951c3c4a))
+
 ## [1.3.3](https://github.com/jpb06/effect-octokit-layer/compare/v1.3.2...v1.3.3) (2025-04-04)
 
 
