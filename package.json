@@ -53,7 +53,7 @@
     "sync-icons": "bun generateReadmeIcons -h 50"
   },
   "dependencies": {
-    "@octokit/core": "6.1.4",
+    "@octokit/core": "6.1.5",
     "picocolors": "1.1.1"
   },
   "peerDependencies": {
