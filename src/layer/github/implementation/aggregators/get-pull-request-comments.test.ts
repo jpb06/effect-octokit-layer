@@ -2,7 +2,6 @@ import { Effect, pipe } from 'effect';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { GithubApiError } from '@errors';
-import { makeLoggerTestLayer } from '@tests/layers';
 import { mockData, octokitRequestResponseHeaders } from '@tests/mock-data';
 import { octokitMock } from '@tests/mocks';
 
@@ -28,16 +27,12 @@ describe('getPullRequestComments effect', () => {
       data: mockData,
       ...octokitRequestResponseHeaders(count),
     });
-    const { LoggerTestLayer } = makeLoggerTestLayer({});
 
     const { getPullRequestComments } = await import(
       './get-pull-request-comments.js'
     );
 
-    const task = pipe(
-      getPullRequestComments(args),
-      Effect.provide(LoggerTestLayer),
-    );
+    const task = getPullRequestComments(args);
     const result = await Effect.runPromise(task);
 
     expect(result).toStrictEqual(Array(count).fill(mockData).flat());
@@ -49,16 +44,12 @@ describe('getPullRequestComments effect', () => {
       data: mockData,
       headers: {},
     });
-    const { LoggerTestLayer } = makeLoggerTestLayer({});
 
     const { getPullRequestComments } = await import(
       './get-pull-request-comments.js'
     );
 
-    const task = pipe(
-      getPullRequestComments(args),
-      Effect.provide(LoggerTestLayer),
-    );
+    const task = getPullRequestComments(args);
     const result = await Effect.runPromise(task);
 
     expect(result).toStrictEqual(mockData);
@@ -73,17 +64,12 @@ describe('getPullRequestComments effect', () => {
         ...octokitRequestResponseHeaders(3),
       },
     );
-    const { LoggerTestLayer } = makeLoggerTestLayer({});
 
     const { getPullRequestComments } = await import(
       './get-pull-request-comments.js'
     );
 
-    const task = pipe(
-      getPullRequestComments(args),
-      Effect.flip,
-      Effect.provide(LoggerTestLayer),
-    );
+    const task = pipe(getPullRequestComments(args), Effect.flip);
     const result = await Effect.runPromise(task);
 
     expect(result).toBeInstanceOf(GithubApiError);

@@ -1,7 +1,6 @@
 import { Effect } from 'effect';
 
 import { defaultConcurrency } from '@constants';
-import type { Logger } from '@dependencies/logger';
 import { arrayRange } from '@util';
 
 import type { Link } from './get-one-page/logic/index.js';
@@ -13,7 +12,7 @@ interface DataWithLinks<TData> {
 
 type GetPage<TArgs, TData, TError> = (
   args: TArgs,
-) => (page: number) => Effect.Effect<DataWithLinks<TData>, TError, Logger>;
+) => (page: number) => Effect.Effect<DataWithLinks<TData>, TError, never>;
 
 export const getAllPages = <
   TError,

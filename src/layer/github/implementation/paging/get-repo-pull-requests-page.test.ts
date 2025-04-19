@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { retryWarningMessage } from '@constants';
 import { ApiRateLimitError, GithubApiError } from '@errors';
 import { delayEffect, delayEffectAndFlip } from '@tests/effects';
-import { makeLoggerTestLayer } from '@tests/layers';
+import { makeConsoleTestLayer } from '@tests/layers';
 import {
   mockData,
   octokitRequestErrorWithRetryAfter,
@@ -33,16 +33,12 @@ describe('getRepoPullRequestsPage effect', () => {
       data: mockData,
       ...octokitRequestResponseHeaders(25),
     });
-    const { LoggerTestLayer } = makeLoggerTestLayer({});
 
     const { getRepoPullRequestsPage } = await import(
       './get-repo-pull-requests-page.js'
     );
 
-    const task = pipe(
-      getRepoPullRequestsPage(args),
-      Effect.provide(LoggerTestLayer),
-    );
+    const task = getRepoPullRequestsPage(args);
     const result = await Effect.runPromise(task);
 
     expect(result.data).toStrictEqual(mockData);
@@ -51,17 +47,12 @@ describe('getRepoPullRequestsPage effect', () => {
 
   it('should fail with an Octokit request error', async () => {
     await octokitMock.requestFail(new GithubApiError({ cause: 'Oh no' }));
-    const { LoggerTestLayer } = makeLoggerTestLayer({});
 
     const { getRepoPullRequestsPage } = await import(
       './get-repo-pull-requests-page.js'
     );
 
-    const task = pipe(
-      getRepoPullRequestsPage(args),
-      Effect.flip,
-      Effect.provide(LoggerTestLayer),
-    );
+    const task = pipe(getRepoPullRequestsPage(args), Effect.flip);
     const result = await Effect.runPromise(task);
 
     expect(result).toBeInstanceOf(GithubApiError);
@@ -71,16 +62,14 @@ describe('getRepoPullRequestsPage effect', () => {
     const retryDelay = 20;
     const error = octokitRequestErrorWithRetryAfter(retryDelay);
     await octokitMock.requestFail(error);
-    const { LoggerTestLayer, warnMock } = makeLoggerTestLayer({});
+
+    const { warnMock, ConsoleTestLayer } = makeConsoleTestLayer();
 
     const { getRepoPullRequestsPage } = await import(
       './get-repo-pull-requests-page.js'
     );
 
-    const task = pipe(
-      getRepoPullRequestsPage(args),
-      Effect.provide(LoggerTestLayer),
-    );
+    const task = pipe(getRepoPullRequestsPage(args), ConsoleTestLayer);
     const effect = delayEffectAndFlip(task, Duration.seconds(40));
     const result = await Effect.runPromise(effect);
 
@@ -99,16 +88,14 @@ describe('getRepoPullRequestsPage effect', () => {
       data: mockData,
       ...octokitRequestResponseHeaders(25),
     });
-    const { LoggerTestLayer, warnMock } = makeLoggerTestLayer({});
+
+    const { warnMock, ConsoleTestLayer } = makeConsoleTestLayer();
 
     const { getRepoPullRequestsPage } = await import(
       './get-repo-pull-requests-page.js'
     );
 
-    const task = pipe(
-      getRepoPullRequestsPage(args),
-      Effect.provide(LoggerTestLayer),
-    );
+    const task = pipe(getRepoPullRequestsPage(args), ConsoleTestLayer);
     const effect = delayEffect(task, Duration.seconds(40));
     const result = await Effect.runPromise(effect);
 
