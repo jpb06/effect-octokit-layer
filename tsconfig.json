@@ -40,7 +40,6 @@
 		"paths": {
 			"@api": ["./src/layer/api/index.ts"],
 			"@constants": ["./src/layer/github/implementation/constants/index.ts"],
-			"@dependencies/logger": ["./src/dependencies/logger/index.ts"],
 			"@implementation": ["./src/layer/github/implementation/index.ts"],
 			"@errors": ["./src/layer/errors/index.ts"],
 			"@provider": ["./src/layer/providers/github-source-analysis.provider.ts"],
