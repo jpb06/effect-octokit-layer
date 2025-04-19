@@ -20,7 +20,7 @@ An [Effect](https://effect.website/) layer to interact with Github Octokit api.
 
 <!-- readme-package-icons start -->
 
-<p align="left"><a href="https://docs.github.com/en/actions" target="_blank"><img height="50" src="https://raw.githubusercontent.com/jpb06/jpb06/master/icons/GithubActions-Dark.svg" /></a>&nbsp;<a href="https://www.typescriptlang.org/docs/" target="_blank"><img height="50" src="https://raw.githubusercontent.com/jpb06/jpb06/master/icons/TypeScript.svg" /></a>&nbsp;<a href="https://nodejs.org/en/docs/" target="_blank"><img height="50" src="https://raw.githubusercontent.com/jpb06/jpb06/master/icons/NodeJS-Dark.svg" /></a>&nbsp;<a href="https://bun.sh/docs" target="_blank"><img height="50" src="https://raw.githubusercontent.com/jpb06/jpb06/master/icons/Bun-Dark.svg" /></a>&nbsp;<a href="https://biomejs.dev/guides/getting-started/" target="_blank"><img height="50" src="https://raw.githubusercontent.com/jpb06/jpb06/master/icons/Biome-Dark.svg" /></a>&nbsp;<a href="https://vitest.dev/guide/" target="_blank"><img height="50" src="https://raw.githubusercontent.com/jpb06/jpb06/master/icons/Vitest-Dark.svg" /></a>&nbsp;<a href="https://www.effect.website/docs/quickstart" target="_blank"><img height="50" src="https://raw.githubusercontent.com/jpb06/jpb06/master/icons/Effect-Dark.svg" /></a></p>
+<p align="left"><a href="https://docs.github.com/en/actions" target="_blank"><img height="50" src="https://raw.githubusercontent.com/jpb06/jpb06/master/icons/GithubActions-Dark.svg" /></a>&nbsp;<a href="https://www.typescriptlang.org/docs/" target="_blank"><img height="50" src="https://raw.githubusercontent.com/jpb06/jpb06/master/icons/TypeScript.svg" /></a>&nbsp;<a href="https://nodejs.org/en/docs/" target="_blank"><img height="50" src="https://raw.githubusercontent.com/jpb06/jpb06/master/icons/NodeJS-Dark.svg" /></a>&nbsp;<a href="https://bun.sh/docs" target="_blank"><img height="50" src="https://raw.githubusercontent.com/jpb06/jpb06/master/icons/Bun-Dark.svg" /></a>&nbsp;<a href="https://biomejs.dev/guides/getting-started/" target="_blank"><img height="50" src="https://raw.githubusercontent.com/jpb06/jpb06/master/icons/Biome-Dark.svg" /></a>&nbsp;<a href="https://vitest.dev/guide/" target="_blank"><img height="50" src="https://raw.githubusercontent.com/jpb06/jpb06/master/icons/Vitest-Dark.svg" /></a></p>
 
 <!-- readme-package-icons end -->
 
@@ -59,11 +59,8 @@ type GetUserProfile = (
 ### 🔶 Users
 
 ```typescript
-import {
-  OctokitLayer,
-  OctokitLayerLive,
-  LoggerConsoleLive,
-} from 'effect-octokit-layer';
+import { Effect, pipe } from 'effect';
+import { OctokitLayer, OctokitLayerLive } from 'effect-octokit-layer';
 
 const username = 'jpb06';
 
@@ -83,7 +80,7 @@ const [profile, repos, orgs, events] = await Effect.runPromise(
       // Fetch all these in parallel
       { concurrency: 'unbounded' }
     ),
-    Effect.provide(Layer.mergeAll(OctokitLayerLive, LoggerConsoleLive))
+    Effect.provide(OctokitLayerLive)
   )
 );
 ```
@@ -91,17 +88,14 @@ const [profile, repos, orgs, events] = await Effect.runPromise(
 ### 🔶 Organizations
 
 ```typescript
-import {
-  OctokitLayer,
-  OctokitLayerLive,
-  LoggerConsoleLive,
-} from 'effect-octokit-layer';
+import { Effect, pipe } from 'effect';
+import { OctokitLayer, OctokitLayerLive } from 'effect-octokit-layer';
 
 const orgs = await Effect.runPromise(
   pipe(
     // Get organization repos
     OctokitLayer.org('my-org').repos(),
-    Effect.provide(Layer.mergeAll(OctokitLayerLive, LoggerConsoleLive))
+    Effect.provide(OctokitLayerLive)
   )
 );
 ```
@@ -109,11 +103,11 @@ const orgs = await Effect.runPromise(
 ### 🔶 Repositories
 
 ```typescript
+import { Effect, pipe } from 'effect';
 import {
-  RepoArgs,
   OctokitLayer,
   OctokitLayerLive,
-  LoggerConsoleLive,
+  type RepoArgs,
 } from 'effect-octokit-layer';
 
 const reactRepo: RepoArgs = {
@@ -135,7 +129,7 @@ const [issues, pulls, issue34] = await Effect.runPromise(
       // Fetch all these in parallel
       { concurrency: 'unbounded' }
     ),
-    Effect.provide(Layer.mergeAll(OctokitLayerLive, LoggerConsoleLive))
+    Effect.provide(OctokitLayerLive)
   )
 );
 ```
@@ -143,82 +137,81 @@ const [issues, pulls, issue34] = await Effect.runPromise(
 ### 🔶 Pull requests
 
 ```typescript
+import { Effect, pipe } from 'effect';
 import {
-  RepoArgs,
+  type RepoArgs,
   OctokitLayer,
   OctokitLayerLive,
-  LoggerConsoleLive,
 } from 'effect-octokit-layer';
 
 const reactRepo: RepoArgs = {
   owner: 'facebook',
   name: 'react',
 };
-const pull = repo.pull(39);
+const pull = OctokitLayer.repo(reactRepo).pull(39);
 
-const [details, comments, reviews, createdReview, deletedReview] = await Effect.runPromise(
-  pipe(
-    Effect.all(
-      [
-        // Pull request details
-        pull.details(),
-        // All the comments made on the pull request #39
-        pull.comments(),
-        // Pull request #39 reviews
-        pull.reviews.get(),
-        // Create a review
-        pull.reviews.create({
-          event: 'REQUEST_CHANGES',
-          body: 'I think some points need to be adressed',
-          comments: [{
-            path: './src/cool.ts',
-            body: "Shouldn't this file be renamed",
-          }],
-        }),
-        // Delete review #2
-        pull.reviews.delete(2);
-      ],
-      { concurrency: 'unbounded' }
-    ),
-    Effect.provide(Layer.mergeAll(OctokitLayerLive, LoggerConsoleLive))
-  )
-);
+const [details, comments, reviews, createdReview, deletedReview] =
+  await Effect.runPromise(
+    pipe(
+      Effect.all(
+        [
+          // Pull request details
+          pull.details(),
+          // All the comments made on the pull request #39
+          pull.comments(),
+          // Pull request #39 reviews
+          pull.reviews.get(),
+          // Create a review
+          pull.reviews.create({
+            event: 'REQUEST_CHANGES',
+            body: 'I think some points need to be adressed',
+            comments: [
+              {
+                path: './src/cool.ts',
+                body: "Shouldn't this file be renamed",
+              },
+            ],
+          }),
+          // Delete review #2
+          pull.reviews.delete(2),
+        ],
+        { concurrency: 'unbounded' }
+      ),
+      Effect.provide(OctokitLayerLive)
+    )
+  );
 ```
 
 ### 🔶 Pull request comments
 
 ```typescript
-import {
-  RepoArgs,
-  OctokitLayer,
-  OctokitLayerLive,
-  LoggerConsoleLive,
-} from 'effect-octokit-layer';
+import { Effect, pipe } from 'effect';
+import { RepoArgs, OctokitLayer, OctokitLayerLive } from 'effect-octokit-layer';
 
 const reactRepo: RepoArgs = {
   owner: 'facebook',
   name: 'react',
 };
-const pull = repo.pull(39);
+const pull = OctokitLayer.repo(reactRepo).pull(39);
 const review = pull.review(2593339077);
 
-const [details, comments, reviews, createdReview, deletedReview] =
-  await Effect.runPromise(
-    pipe(
-      Effect.all([
-        // Create a comment in review #2593339077 on pull request #39
-        review.comments.create({
-          path: './src',
-          body: 'cool',
-          commitId: 'ff',
-        }),
-        // Get review #2593339077 comments
-        review.comments.get(),
-        // Delete comment #1 in review #2593339077
-        review.comments.delete(1),
-      ])
-    )
-  );
+const [createdComment, comments, deletedComment] = await Effect.runPromise(
+  pipe(
+    Effect.all([
+      // Create a comment in review #2593339077 on pull request #39
+      review.comments.create({
+        path: './src',
+        body: 'cool',
+        commitId: 'ff',
+      }),
+      // Get review #2593339077 comments
+      review.comments.get(),
+      // Delete comment #1 in review #2593339077
+      review.comments.delete(1),
+    ]),
+    Effect.provide(OctokitLayerLive)
+  )
+);
 ```
 
 ### 🔶 Parallelism and resilience
