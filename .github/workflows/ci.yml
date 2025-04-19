@@ -34,6 +34,9 @@ jobs:
       - name: 📥 Install deps
         run: bun install --frozen-lockfile
 
+      - name: 📓 Format
+        run: bun run format-ci
+
       - name: 🔬 Lint
         run: bun run lint
 
