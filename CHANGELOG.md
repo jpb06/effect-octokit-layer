@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.4.0](https://github.com/jpb06/effect-octokit-layer/compare/v1.3.5...v1.4.0) (2025-04-19)
+
+
+### Features
+
+* using effect internal console layer ([#42](https://github.com/jpb06/effect-octokit-layer/issues/42)) ([de24f7f](https://github.com/jpb06/effect-octokit-layer/commit/de24f7f61ab44fa9838c17d62b71701c8c946578))
+
+
+### Bug Fixes
+
+* removing useless alias ([#44](https://github.com/jpb06/effect-octokit-layer/issues/44)) ([64b5faa](https://github.com/jpb06/effect-octokit-layer/commit/64b5faae3969fc23eccc70f89cd0f8a7f8f4fcff))
+
 ## [1.3.5](https://github.com/jpb06/effect-octokit-layer/compare/v1.3.4...v1.3.5) (2025-04-19)
 
 
