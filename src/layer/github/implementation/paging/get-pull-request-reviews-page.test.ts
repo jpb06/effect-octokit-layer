@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { retryWarningMessage } from '@constants';
 import { ApiRateLimitError, GithubApiError } from '@errors';
 import { delayEffect, delayEffectAndFlip } from '@tests/effects';
-import { makeLoggerTestLayer } from '@tests/layers';
+import { makeConsoleTestLayer } from '@tests/layers';
 import {
   mockData,
   octokitRequestErrorWithRetryAfter,
@@ -34,16 +34,12 @@ describe('getPullRequestReviewsPage effect', () => {
       data: mockData,
       ...octokitRequestResponseHeaders(25),
     });
-    const { LoggerTestLayer } = makeLoggerTestLayer({});
 
     const { getPullRequestReviewsPage } = await import(
       './get-pull-request-reviews-page.js'
     );
 
-    const task = pipe(
-      getPullRequestReviewsPage(args),
-      Effect.provide(LoggerTestLayer),
-    );
+    const task = getPullRequestReviewsPage(args);
     const result = await Effect.runPromise(task);
 
     expect(result.data).toStrictEqual(mockData);
@@ -52,17 +48,12 @@ describe('getPullRequestReviewsPage effect', () => {
 
   it('should fail with an Octokit request error', async () => {
     await octokitMock.requestFail(new GithubApiError({ cause: 'Oh no' }));
-    const { LoggerTestLayer } = makeLoggerTestLayer({});
 
     const { getPullRequestReviewsPage } = await import(
       './get-pull-request-reviews-page.js'
     );
 
-    const task = pipe(
-      getPullRequestReviewsPage(args),
-      Effect.flip,
-      Effect.provide(LoggerTestLayer),
-    );
+    const task = pipe(getPullRequestReviewsPage(args), Effect.flip);
     const result = await Effect.runPromise(task);
 
     expect(result).toBeInstanceOf(GithubApiError);
@@ -72,16 +63,13 @@ describe('getPullRequestReviewsPage effect', () => {
     const retryDelay = 20;
     const error = octokitRequestErrorWithRetryAfter(retryDelay);
     await octokitMock.requestFail(error);
-    const { LoggerTestLayer, warnMock } = makeLoggerTestLayer({});
+    const { warnMock, ConsoleTestLayer } = makeConsoleTestLayer();
 
     const { getPullRequestReviewsPage } = await import(
       './get-pull-request-reviews-page.js'
     );
 
-    const task = pipe(
-      getPullRequestReviewsPage(args),
-      Effect.provide(LoggerTestLayer),
-    );
+    const task = pipe(getPullRequestReviewsPage(args), ConsoleTestLayer);
     const effect = delayEffectAndFlip(task, Duration.seconds(40));
     const result = await Effect.runPromise(effect);
 
@@ -100,16 +88,13 @@ describe('getPullRequestReviewsPage effect', () => {
       data: mockData,
       ...octokitRequestResponseHeaders(25),
     });
-    const { LoggerTestLayer, warnMock } = makeLoggerTestLayer({});
+    const { warnMock, ConsoleTestLayer } = makeConsoleTestLayer();
 
     const { getPullRequestReviewsPage } = await import(
       './get-pull-request-reviews-page.js'
     );
 
-    const task = pipe(
-      getPullRequestReviewsPage(args),
-      Effect.provide(LoggerTestLayer),
-    );
+    const task = pipe(getPullRequestReviewsPage(args), ConsoleTestLayer);
     const effect = delayEffect(task, Duration.seconds(40));
     const result = await Effect.runPromise(effect);
 

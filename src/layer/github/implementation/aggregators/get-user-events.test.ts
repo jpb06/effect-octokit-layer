@@ -2,7 +2,6 @@ import { Effect, pipe } from 'effect';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { GithubApiError } from '@errors';
-import { makeLoggerTestLayer } from '@tests/layers';
 import { mockData, octokitRequestResponseHeaders } from '@tests/mock-data';
 import { octokitMock } from '@tests/mocks';
 
@@ -26,11 +25,10 @@ describe('getUserEvents effect', () => {
       data: mockData,
       ...octokitRequestResponseHeaders(count),
     });
-    const { LoggerTestLayer } = makeLoggerTestLayer({});
 
     const { getUserEvents } = await import('./get-user-events.js');
 
-    const task = pipe(getUserEvents(args), Effect.provide(LoggerTestLayer));
+    const task = getUserEvents(args);
     const result = await Effect.runPromise(task);
 
     expect(result).toStrictEqual(Array(count).fill(mockData).flat());
@@ -42,11 +40,10 @@ describe('getUserEvents effect', () => {
       data: mockData,
       headers: {},
     });
-    const { LoggerTestLayer } = makeLoggerTestLayer({});
 
     const { getUserEvents } = await import('./get-user-events.js');
 
-    const task = pipe(getUserEvents(args), Effect.provide(LoggerTestLayer));
+    const task = getUserEvents(args);
     const result = await Effect.runPromise(task);
 
     expect(result).toStrictEqual(mockData);
@@ -61,15 +58,10 @@ describe('getUserEvents effect', () => {
         ...octokitRequestResponseHeaders(3),
       },
     );
-    const { LoggerTestLayer } = makeLoggerTestLayer({});
 
     const { getUserEvents } = await import('./get-user-events.js');
 
-    const task = pipe(
-      getUserEvents(args),
-      Effect.flip,
-      Effect.provide(LoggerTestLayer),
-    );
+    const task = pipe(getUserEvents(args), Effect.flip);
     const result = await Effect.runPromise(task);
 
     expect(result).toBeInstanceOf(GithubApiError);

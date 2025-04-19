@@ -2,7 +2,6 @@ import { Effect, pipe } from 'effect';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { GithubApiError } from '@errors';
-import { makeLoggerTestLayer } from '@tests/layers';
 import { mockData, octokitRequestResponseHeaders } from '@tests/mock-data';
 import { octokitMock } from '@tests/mocks';
 
@@ -29,16 +28,12 @@ describe('getPullRequestReviewComments effect', () => {
       data: mockData,
       ...octokitRequestResponseHeaders(count),
     });
-    const { LoggerTestLayer } = makeLoggerTestLayer({});
 
     const { getPullRequestReviewComments } = await import(
       './get-pull-request-review-comments.js'
     );
 
-    const task = pipe(
-      getPullRequestReviewComments(args),
-      Effect.provide(LoggerTestLayer),
-    );
+    const task = getPullRequestReviewComments(args);
     const result = await Effect.runPromise(task);
 
     expect(result).toStrictEqual(Array(count).fill(mockData).flat());
@@ -50,16 +45,12 @@ describe('getPullRequestReviewComments effect', () => {
       data: mockData,
       headers: {},
     });
-    const { LoggerTestLayer } = makeLoggerTestLayer({});
 
     const { getPullRequestReviewComments } = await import(
       './get-pull-request-review-comments.js'
     );
 
-    const task = pipe(
-      getPullRequestReviewComments(args),
-      Effect.provide(LoggerTestLayer),
-    );
+    const task = getPullRequestReviewComments(args);
     const result = await Effect.runPromise(task);
 
     expect(result).toStrictEqual(mockData);
@@ -74,17 +65,12 @@ describe('getPullRequestReviewComments effect', () => {
         ...octokitRequestResponseHeaders(3),
       },
     );
-    const { LoggerTestLayer } = makeLoggerTestLayer({});
 
     const { getPullRequestReviewComments } = await import(
       './get-pull-request-review-comments.js'
     );
 
-    const task = pipe(
-      getPullRequestReviewComments(args),
-      Effect.flip,
-      Effect.provide(LoggerTestLayer),
-    );
+    const task = pipe(getPullRequestReviewComments(args), Effect.flip);
     const result = await Effect.runPromise(task);
 
     expect(result).toBeInstanceOf(GithubApiError);

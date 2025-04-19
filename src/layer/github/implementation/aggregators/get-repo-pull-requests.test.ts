@@ -2,7 +2,6 @@ import { Effect, pipe } from 'effect';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { GithubApiError } from '@errors';
-import { makeLoggerTestLayer } from '@tests/layers';
 import { mockData, octokitRequestResponseHeaders } from '@tests/mock-data';
 import { octokitMock } from '@tests/mocks';
 
@@ -27,14 +26,10 @@ describe('getRepoPullRequests effect', () => {
       data: mockData,
       ...octokitRequestResponseHeaders(count),
     });
-    const { LoggerTestLayer } = makeLoggerTestLayer({});
 
     const { getRepoPullRequests } = await import('./get-repo-pull-requests.js');
 
-    const task = pipe(
-      getRepoPullRequests(args),
-      Effect.provide(LoggerTestLayer),
-    );
+    const task = getRepoPullRequests(args);
     const result = await Effect.runPromise(task);
 
     expect(result).toStrictEqual(Array(count).fill(mockData).flat());
@@ -46,14 +41,10 @@ describe('getRepoPullRequests effect', () => {
       data: mockData,
       headers: {},
     });
-    const { LoggerTestLayer } = makeLoggerTestLayer({});
 
     const { getRepoPullRequests } = await import('./get-repo-pull-requests.js');
 
-    const task = pipe(
-      getRepoPullRequests(args),
-      Effect.provide(LoggerTestLayer),
-    );
+    const task = getRepoPullRequests(args);
     const result = await Effect.runPromise(task);
 
     expect(result).toStrictEqual(mockData);
@@ -68,15 +59,10 @@ describe('getRepoPullRequests effect', () => {
         ...octokitRequestResponseHeaders(3),
       },
     );
-    const { LoggerTestLayer } = makeLoggerTestLayer({});
 
     const { getRepoPullRequests } = await import('./get-repo-pull-requests.js');
 
-    const task = pipe(
-      getRepoPullRequests(args),
-      Effect.flip,
-      Effect.provide(LoggerTestLayer),
-    );
+    const task = pipe(getRepoPullRequests(args), Effect.flip);
     const result = await Effect.runPromise(task);
 
     expect(result).toBeInstanceOf(GithubApiError);

@@ -42,16 +42,10 @@ The layer exposes functions with the following type:
 import type { ConfigError, Effect } from 'effect';
 
 type LayerErrors = GithubApiError | ApiRateLimitError | ConfigError.ConfigError;
-type LoggerLayer = {
-  warn: (
-    message?: unknown,
-    ...optionalParams: unknown[]
-  ) => Effect.Effect<void>;
-};
 
 type LayerFunction<TArgs, TResult> = (
   args: TArgs
-) => Effect<TResult, LayerErrors, LoggerLayer>;
+) => Effect<TResult, LayerErrors, never>;
 ```
 
 For example, getting user profile can be done with this function:
@@ -59,7 +53,7 @@ For example, getting user profile can be done with this function:
 ```ts
 type GetUserProfile = (
   username: string
-) => Effect<UserProfileResult, LayerErrors, Logger>;
+) => Effect<UserProfileResult, LayerErrors, never>;
 ```
 
 ### 🔶 Users

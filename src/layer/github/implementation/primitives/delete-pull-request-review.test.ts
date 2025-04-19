@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { retryWarningMessage } from '@constants';
 import { ApiRateLimitError, GithubApiError } from '@errors';
 import { delayEffect, delayEffectAndFlip } from '@tests/effects';
-import { makeLoggerTestLayer } from '@tests/layers';
+import { makeConsoleTestLayer } from '@tests/layers';
 import {
   mockData,
   octokitRequestErrorWithRetryAfter,
@@ -33,16 +33,12 @@ describe('deletePullRequestReview effect', () => {
     octokitMock.requestOnce({
       data: mockData,
     });
-    const { LoggerTestLayer } = makeLoggerTestLayer({});
 
     const { deletePullRequestReview } = await import(
       './delete-pull-request-review.js'
     );
 
-    const task = pipe(
-      deletePullRequestReview(args),
-      Effect.provide(LoggerTestLayer),
-    );
+    const task = deletePullRequestReview(args);
     const result = await Effect.runPromise(task);
 
     expect(result).toStrictEqual(mockData);
@@ -50,17 +46,12 @@ describe('deletePullRequestReview effect', () => {
 
   it('should fail with an Octokit request error', async () => {
     octokitMock.requestFail(new GithubApiError({ cause: 'Oh no' }));
-    const { LoggerTestLayer } = makeLoggerTestLayer({});
 
     const { deletePullRequestReview } = await import(
       './delete-pull-request-review.js'
     );
 
-    const task = pipe(
-      deletePullRequestReview(args),
-      Effect.flip,
-      Effect.provide(LoggerTestLayer),
-    );
+    const task = pipe(deletePullRequestReview(args), Effect.flip);
     const result = await Effect.runPromise(task);
 
     expect(result).toBeInstanceOf(GithubApiError);
@@ -71,16 +62,14 @@ describe('deletePullRequestReview effect', () => {
     const error = octokitRequestErrorWithRetryAfter(retryDelay);
 
     await octokitMock.requestFail(error);
-    const { LoggerTestLayer, warnMock } = makeLoggerTestLayer({});
+
+    const { warnMock, ConsoleTestLayer } = makeConsoleTestLayer();
 
     const { deletePullRequestReview } = await import(
       './delete-pull-request-review.js'
     );
 
-    const task = pipe(
-      deletePullRequestReview(args),
-      Effect.provide(LoggerTestLayer),
-    );
+    const task = pipe(deletePullRequestReview(args), ConsoleTestLayer);
     const effect = delayEffectAndFlip(task, Duration.seconds(40));
     const result = await Effect.runPromise(effect);
 
@@ -99,16 +88,14 @@ describe('deletePullRequestReview effect', () => {
       data: mockData,
       ...octokitRequestResponseHeaders(25),
     });
-    const { LoggerTestLayer, warnMock } = makeLoggerTestLayer({});
+
+    const { warnMock, ConsoleTestLayer } = makeConsoleTestLayer();
 
     const { deletePullRequestReview } = await import(
       './delete-pull-request-review.js'
     );
 
-    const task = pipe(
-      deletePullRequestReview(args),
-      Effect.provide(LoggerTestLayer),
-    );
+    const task = pipe(deletePullRequestReview(args), ConsoleTestLayer);
     const effect = delayEffect(task, Duration.seconds(40));
     const result = await Effect.runPromise(effect);
 
