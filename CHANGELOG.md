@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.0](https://github.com/jpb06/effect-octokit-layer/compare/v1.6.0...v1.7.0) (2025-05-04)
+
+
+### Features
+
+* **layer:** adding release, tags and languages getters to repo api ([#65](https://github.com/jpb06/effect-octokit-layer/issues/65)) ([2a0bee4](https://github.com/jpb06/effect-octokit-layer/commit/2a0bee4c0d2669d8506239b24c2c6dd29114b8ef))
+
 ## [1.6.0](https://github.com/jpb06/effect-octokit-layer/compare/v1.5.0...v1.6.0) (2025-05-04)
 
 
