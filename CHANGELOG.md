@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.1](https://github.com/jpb06/effect-octokit-layer/compare/v1.8.0...v1.8.1) (2025-05-04)
+
+
+### Bug Fixes
+
+* repo languages args ([#69](https://github.com/jpb06/effect-octokit-layer/issues/69)) ([d9ad87a](https://github.com/jpb06/effect-octokit-layer/commit/d9ad87a664c5c8c168f471175e015be201104990))
+
 ## [1.8.0](https://github.com/jpb06/effect-octokit-layer/compare/v1.7.0...v1.8.0) (2025-05-04)
 
 
