@@ -18,6 +18,7 @@ import type {
   UserEventsResult,
   UserOrgsResult,
   UserProfileResult,
+  UserReposType,
   UserRepositoriesResult,
 } from '@implementation';
 import type { RepoArgs } from '@implementation/types';
@@ -48,6 +49,7 @@ export type {
   UserOrgsResult,
   UserProfileResult,
   PullRequestState,
+  UserReposType,
 };
 
 export * from './types/effect.types.js';

@@ -72,7 +72,7 @@ const [profile, repos, orgs, events, commits, issues, pullRequests] =
           // Get user profile
           octokitUser.profile(),
           // Get user repos
-          octokitUser.repos(),
+          octokitUser.repos('all'),
           // Get user organizations
           octokitUser.orgs(),
           // Get user events
@@ -118,28 +118,42 @@ const octokitRepo = OctokitLayer.repo({
   repo: 'react',
 });
 
-const [issues, issue34, issue34Comments, pulls, pullsComments] =
-  await Effect.runPromise(
-    pipe(
-      Effect.all(
-        [
-          // Get all issues
-          octokitRepo.issues('all'),
-          // Get issue #34
-          octokitRepo.issue(34).details(),
-          // Get issue #34 comments
-          octokitRepo.issue(34).comments(),
-          // Get all pull requests
-          octokitRepo.pulls.getAll(),
-          // Get all pull requests comments in repo
-          octokitRepo.pulls.comments(),
-        ],
-        // Fetch all these in parallel
-        { concurrency: 'unbounded' }
-      ),
-      Effect.provide(OctokitLayerLive)
-    )
-  );
+const [
+  languagesBytes,
+  releases,
+  tags,
+  issues,
+  issue34,
+  issue34Comments,
+  pulls,
+  pullsComments,
+] = await Effect.runPromise(
+  pipe(
+    Effect.all(
+      [
+        // Get bytes written per language
+        octokitRepo.languages(),
+        // Get releases
+        octokitRepo.releases(),
+        // Get tags
+        octokitRepo.tags(),
+        // Get all issues
+        octokitRepo.issues('all'),
+        // Get issue #34
+        octokitRepo.issue(34).details(),
+        // Get issue #34 comments
+        octokitRepo.issue(34).comments(),
+        // Get all pull requests
+        octokitRepo.pulls.getAll(),
+        // Get all pull requests comments in repo
+        octokitRepo.pulls.comments(),
+      ],
+      // Fetch all these in parallel
+      { concurrency: 'unbounded' }
+    ),
+    Effect.provide(OctokitLayerLive)
+  )
+);
 ```
 
 ### 🔶 Pull requests

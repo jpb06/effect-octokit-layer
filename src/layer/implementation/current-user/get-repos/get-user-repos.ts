@@ -4,17 +4,20 @@ import { getAllPages } from '@implementation/generic';
 import type { EffectResultSuccess } from '@types';
 
 import { getUserReposPage } from './get-user-repos-page.js';
+import type { UserReposType } from './user-repos-type.type.js';
 
 export interface GetUserRepositoriesArgs {
   username: string;
+  type: UserReposType;
   concurrency?: number;
 }
 
 const getUserPage =
-  ({ username }: GetUserRepositoriesArgs) =>
+  ({ username, type }: GetUserRepositoriesArgs) =>
   (page: number) =>
     getUserReposPage({
       username,
+      type,
       page,
     });
 
