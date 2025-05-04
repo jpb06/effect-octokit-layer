@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/jpb06/effect-octokit-layer/compare/v1.4.2...v1.5.0) (2025-05-04)
+
+
+### Features
+
+* implementing requirements for github profile stats ([#59](https://github.com/jpb06/effect-octokit-layer/issues/59)) ([e406e6e](https://github.com/jpb06/effect-octokit-layer/commit/e406e6e109fb1286f3df6f86d990541af0014f05))
+
 ## [1.4.2](https://github.com/jpb06/effect-octokit-layer/compare/v1.4.1...v1.4.2) (2025-04-22)
 
 
