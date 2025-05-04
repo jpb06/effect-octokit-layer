@@ -22,8 +22,8 @@ jobs:
       - name: ⎔ Setup node
         uses: actions/setup-node@v4
         with:
-          node-version-file: '.node-version'
-          registry-url: 'https://registry.npmjs.org'
+          node-version-file: ".node-version"
+          registry-url: "https://registry.npmjs.org"
           cache-dependency-path: ./package.json
 
       - name: 📥 Install deps
@@ -34,3 +34,8 @@ jobs:
 
       - name: 🥁 Generating coverage badges
         uses: jpb06/coverage-badges-action@latest
+        with:
+          badges-icon: vitest
+          commit-message: "chore: updating coverage badges"
+          commit-user: jpb06
+          commit-user-email: jpb.06@outlook.com
