@@ -39,8 +39,12 @@
 		"rootDir": "./src",
 		"paths": {
 			"@api": ["./src/layer/api/index.ts"],
-			"@constants": ["./src/layer/github/implementation/constants/index.ts"],
-			"@implementation": ["./src/layer/github/implementation/index.ts"],
+			"@constants": ["./src/layer/constants/index.ts"],
+			"@implementation": ["./src/layer/implementation/index.ts"],
+			"@implementation/generic": [
+				"./src/layer/implementation/generic/index.ts"
+			],
+			"@implementation/types": ["./src/layer/implementation/types/index.ts"],
 			"@errors": ["./src/layer/errors/index.ts"],
 			"@provider": ["./src/layer/providers/github-source-analysis.provider.ts"],
 			"@schedules": ["./src/layer/schedules/index.ts"],

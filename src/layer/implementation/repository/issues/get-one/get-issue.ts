@@ -1,0 +1,40 @@
+import { Effect, pipe } from 'effect';
+
+import {
+  handleOctokitRequestError,
+  warnOnRetryAndFailWithApiRateLimitError,
+} from '@errors';
+import type { RepoArgs } from '@implementation/types';
+import { githubSourceAnalysisProvider } from '@provider';
+import { retryAfterSchedule } from '@schedules';
+import type { EffectResultSuccess } from '@types';
+
+export interface GetIssueArgs extends RepoArgs {
+  number: number;
+}
+
+export const getIssue = ({ owner, repo, number }: GetIssueArgs) =>
+  pipe(
+    githubSourceAnalysisProvider,
+    Effect.flatMap((octokit) =>
+      pipe(
+        Effect.tryPromise({
+          try: () =>
+            octokit.request('GET /repos/{owner}/{repo}/issues/{issue_number}', {
+              owner,
+              repo,
+              issue_number: number,
+            }),
+          catch: handleOctokitRequestError,
+        }),
+        Effect.catchTag('retry-after', warnOnRetryAndFailWithApiRateLimitError),
+        Effect.retry(retryAfterSchedule),
+      ),
+    ),
+    Effect.map((response) => response.data),
+    Effect.withSpan('get-issue', {
+      attributes: { owner, repo, number },
+    }),
+  );
+
+export type IssueResult = EffectResultSuccess<typeof getIssue>;
