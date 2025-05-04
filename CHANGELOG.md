@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.0](https://github.com/jpb06/effect-octokit-layer/compare/v1.5.0...v1.6.0) (2025-05-04)
+
+
+### Features
+
+* adding http api fetchers to the layer ([#62](https://github.com/jpb06/effect-octokit-layer/issues/62)) ([1ba2787](https://github.com/jpb06/effect-octokit-layer/commit/1ba27870ae60c7fc0b1cd5a1b50730c3ff536190))
+
 ## [1.5.0](https://github.com/jpb06/effect-octokit-layer/compare/v1.4.2...v1.5.0) (2025-05-04)
 
 
