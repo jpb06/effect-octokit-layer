@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.0](https://github.com/jpb06/effect-octokit-layer/compare/v1.7.0...v1.8.0) (2025-05-04)
+
+
+### Features
+
+* **user:** adding type parameter to user repos getter ([#67](https://github.com/jpb06/effect-octokit-layer/issues/67)) ([3410b27](https://github.com/jpb06/effect-octokit-layer/commit/3410b274c00337d4f9547e3e33eb36e7037776ec))
+
 ## [1.7.0](https://github.com/jpb06/effect-octokit-layer/compare/v1.6.0...v1.7.0) (2025-05-04)
 
 
