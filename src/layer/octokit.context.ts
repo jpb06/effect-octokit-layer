@@ -8,14 +8,23 @@ import type {
   DeletePullRequestCommentResult,
   DeletePullRequestReviewResult,
   GetIssueArgs,
+  GetIssueCommentsArgs,
+  GetOrgRepositoriesArgs,
   GetPullRequestArgs,
   GetPullRequestCommentsArgs,
   GetPullRequestReviewCommentsArgs,
   GetPullRequestReviewsArgs,
+  GetRepoIssuesArgs,
   GetRepoPullRequestsArgs,
-  GetRepositoriesArgs,
+  GetRepoPullRequestsCommentsArgs,
+  GetUserCommitsArgs,
   GetUserEventsArgs,
+  GetUserIssuesArgs,
+  GetUserPullRequestsArgs,
+  GetUserRepositoriesArgs,
+  IssueCommentsResult,
   IssueResult,
+  OrgRepositoriesResult,
   PullRequestCommentCreationArgs,
   PullRequestCommentDeletionArgs,
   PullRequestCommentsResult,
@@ -25,14 +34,21 @@ import type {
   PullRequestReviewDeletionArgs,
   PullRequestReviewsResult,
   RepoIssuesResult,
+  RepoPullRequestsCommentsResult,
   RepoPullRequestsResult,
-  RepositoriesResult,
+  UserCommitsResult,
   UserEventsResult,
+  UserIssuesResult,
   UserOrgsResult,
   UserProfileResult,
+  UserPullRequestsResult,
+  UserRepositoriesResult,
 } from '@implementation';
 
-type LayerErrors = GithubApiError | ApiRateLimitError | ConfigError.ConfigError;
+export type LayerErrors =
+  | GithubApiError
+  | ApiRateLimitError
+  | ConfigError.ConfigError;
 
 export interface Octokit {
   readonly getUserProfile: (
@@ -41,21 +57,39 @@ export interface Octokit {
   readonly getUserOrgs: (
     username: string,
   ) => Effect.Effect<UserOrgsResult, LayerErrors, never>;
+  readonly getUserCommits: (
+    args: GetUserCommitsArgs,
+  ) => Effect.Effect<UserCommitsResult, LayerErrors, never>;
   readonly getUserEvents: (
     args: GetUserEventsArgs,
   ) => Effect.Effect<UserEventsResult, LayerErrors, never>;
-  readonly getRepositories: (
-    args: GetRepositoriesArgs,
-  ) => Effect.Effect<RepositoriesResult, LayerErrors, never>;
+  readonly getUserIssues: (
+    args: GetUserIssuesArgs,
+  ) => Effect.Effect<UserIssuesResult, LayerErrors, never>;
+  readonly getUserPullRequests: (
+    args: GetUserPullRequestsArgs,
+  ) => Effect.Effect<UserPullRequestsResult, LayerErrors, never>;
+  readonly getOrgRepositories: (
+    args: GetOrgRepositoriesArgs,
+  ) => Effect.Effect<OrgRepositoriesResult, LayerErrors, never>;
+  readonly getUserRepositories: (
+    args: GetUserRepositoriesArgs,
+  ) => Effect.Effect<UserRepositoriesResult, LayerErrors, never>;
   readonly getRepoPullRequests: (
     args: GetRepoPullRequestsArgs,
   ) => Effect.Effect<RepoPullRequestsResult, LayerErrors, never>;
+  readonly getRepoPullRequestsComments: (
+    args: GetRepoPullRequestsCommentsArgs,
+  ) => Effect.Effect<RepoPullRequestsCommentsResult, LayerErrors, never>;
   readonly getRepoIssues: (
-    args: GetRepoPullRequestsArgs,
+    args: GetRepoIssuesArgs,
   ) => Effect.Effect<RepoIssuesResult, LayerErrors, never>;
   readonly getIssue: (
     args: GetIssueArgs,
   ) => Effect.Effect<IssueResult, LayerErrors, never>;
+  readonly getIssueComments: (
+    args: GetIssueCommentsArgs,
+  ) => Effect.Effect<IssueCommentsResult, LayerErrors, never>;
   readonly getPullRequest: (
     args: GetPullRequestArgs,
   ) => Effect.Effect<PullRequestResult, LayerErrors, never>;

@@ -8,7 +8,7 @@ export const retryAfterSchedule = pipe(
   Schedule.whileInputEffect((e) => {
     const isApiRateLimit = isApiRateLimitError(e);
     if (isApiRateLimit) {
-      return Effect.delay(Duration.seconds(+e.retryAfter))(
+      return Effect.delay(Duration.seconds(+e.retryAfterInSeconds + 5))(
         Effect.succeed(true),
       );
     }

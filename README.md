@@ -112,7 +112,7 @@ import {
 
 const reactRepo: RepoArgs = {
   owner: 'facebook',
-  name: 'react',
+  repo: 'react',
 };
 
 const [issues, pulls, issue34] = await Effect.runPromise(
@@ -120,11 +120,11 @@ const [issues, pulls, issue34] = await Effect.runPromise(
     Effect.all(
       [
         // Get all issues
-        OctokitLayer.repo(reactRepo).issues(),
+        OctokitLayer.repo(reactRepo).issues('all'),
         // Get all pull requests
-        OctokitLayer.repo(reactRepo).pulls(),
+        OctokitLayer.repo(reactRepo).pulls.getAll(),
         // Get issue #34
-        OctokitLayer.repo(reactRepo).issue(34),
+        OctokitLayer.repo(reactRepo).issue(34).details(),
       ],
       // Fetch all these in parallel
       { concurrency: 'unbounded' }
@@ -146,7 +146,7 @@ import {
 
 const reactRepo: RepoArgs = {
   owner: 'facebook',
-  name: 'react',
+  repo: 'react',
 };
 const pull = OctokitLayer.repo(reactRepo).pull(39);
 
@@ -190,7 +190,7 @@ import { RepoArgs, OctokitLayer, OctokitLayerLive } from 'effect-octokit-layer';
 
 const reactRepo: RepoArgs = {
   owner: 'facebook',
-  name: 'react',
+  repo: 'react',
 };
 const pull = OctokitLayer.repo(reactRepo).pull(39);
 const review = pull.review(2593339077);
@@ -231,3 +231,7 @@ OctokitLayer.repo({
 ```
 
 Note that github api enforces [api rate limits](https://docs.github.com/en/rest/using-the-rest-api/best-practices-for-using-the-rest-api?apiVersion=2022-11-28#dealing-with-secondary-rate-limits). Fetching too many results concurrently will cause an api rate limit. In that case, a warning will be displayed and the call will be attempted again after the time window provided by github api (typically 60 seconds).
+
+## ⚡ github api documentation
+
+[Github api available endpoints](https://docs.github.com/en/rest/authentication/endpoints-available-for-github-app-user-access-tokens?apiVersion=2022-11-28)
