@@ -62,27 +62,34 @@ type GetUserProfile = (
 import { Effect, pipe } from 'effect';
 import { OctokitLayer, OctokitLayerLive } from 'effect-octokit-layer';
 
-const username = 'jpb06';
+const octokitUser = OctokitLayer.user('jpb06');
 
-const [profile, repos, orgs, events] = await Effect.runPromise(
-  pipe(
-    Effect.all(
-      [
-        // Get user profile
-        OctokitLayer.user(username).profile(),
-        // Get user repos
-        OctokitLayer.user(username).repos(),
-        // Get user organizations
-        OctokitLayer.user(username).orgs(),
-        // Get user events
-        OctokitLayer.user(username).events(),
-      ],
-      // Fetch all these in parallel
-      { concurrency: 'unbounded' }
-    ),
-    Effect.provide(OctokitLayerLive)
-  )
-);
+const [profile, repos, orgs, events, commits, issues, pullRequests] =
+  await Effect.runPromise(
+    pipe(
+      Effect.all(
+        [
+          // Get user profile
+          octokitUser.profile(),
+          // Get user repos
+          octokitUser.repos(),
+          // Get user organizations
+          octokitUser.orgs(),
+          // Get user events
+          octokitUser.events(),
+          // Get user commits via search (1000 results max)
+          octokitUser.commits(),
+          // Get user issues via search (1000 results max)
+          octokitUser.issues(),
+          // Get user merged pull requests via search (1000 results max)
+          octokitUser.pullRequests('merged'),
+        ],
+        // Fetch all these in parallel
+        { concurrency: 'unbounded' }
+      ),
+      Effect.provide(OctokitLayerLive)
+    )
+  );
 ```
 
 ### 🔶 Organizations
@@ -104,51 +111,47 @@ const orgs = await Effect.runPromise(
 
 ```typescript
 import { Effect, pipe } from 'effect';
-import {
-  OctokitLayer,
-  OctokitLayerLive,
-  type RepoArgs,
-} from 'effect-octokit-layer';
+import { OctokitLayer, OctokitLayerLive } from 'effect-octokit-layer';
 
-const reactRepo: RepoArgs = {
+const octokitRepo = OctokitLayer.repo({
   owner: 'facebook',
   repo: 'react',
-};
+});
 
-const [issues, pulls, issue34] = await Effect.runPromise(
-  pipe(
-    Effect.all(
-      [
-        // Get all issues
-        OctokitLayer.repo(reactRepo).issues('all'),
-        // Get all pull requests
-        OctokitLayer.repo(reactRepo).pulls.getAll(),
-        // Get issue #34
-        OctokitLayer.repo(reactRepo).issue(34).details(),
-      ],
-      // Fetch all these in parallel
-      { concurrency: 'unbounded' }
-    ),
-    Effect.provide(OctokitLayerLive)
-  )
-);
+const [issues, issue34, issue34Comments, pulls, pullsComments] =
+  await Effect.runPromise(
+    pipe(
+      Effect.all(
+        [
+          // Get all issues
+          octokitRepo.issues('all'),
+          // Get issue #34
+          octokitRepo.issue(34).details(),
+          // Get issue #34 comments
+          octokitRepo.issue(34).comments(),
+          // Get all pull requests
+          octokitRepo.pulls.getAll(),
+          // Get all pull requests comments in repo
+          octokitRepo.pulls.comments(),
+        ],
+        // Fetch all these in parallel
+        { concurrency: 'unbounded' }
+      ),
+      Effect.provide(OctokitLayerLive)
+    )
+  );
 ```
 
 ### 🔶 Pull requests
 
 ```typescript
 import { Effect, pipe } from 'effect';
-import {
-  type RepoArgs,
-  OctokitLayer,
-  OctokitLayerLive,
-} from 'effect-octokit-layer';
+import { OctokitLayer, OctokitLayerLive } from 'effect-octokit-layer';
 
-const reactRepo: RepoArgs = {
+const pull = OctokitLayer.repo({
   owner: 'facebook',
   repo: 'react',
-};
-const pull = OctokitLayer.repo(reactRepo).pull(39);
+}).pull(39);
 
 const [details, comments, reviews, createdReview, deletedReview] =
   await Effect.runPromise(
@@ -230,7 +233,9 @@ OctokitLayer.repo({
 }).pulls(100);
 ```
 
-Note that github api enforces [api rate limits](https://docs.github.com/en/rest/using-the-rest-api/best-practices-for-using-the-rest-api?apiVersion=2022-11-28#dealing-with-secondary-rate-limits). Fetching too many results concurrently will cause an api rate limit. In that case, a warning will be displayed and the call will be attempted again after the time window provided by github api (typically 60 seconds).
+Note that github api enforces [api rate limits](https://docs.github.com/en/rest/using-the-rest-api/best-practices-for-using-the-rest-api?apiVersion=2022-11-28#dealing-with-secondary-rate-limits). Fetching too many results concurrently will cause an api rate limit. In that case, a warning will be displayed and the call will be attempted again after the time window provided by github api.
+
+![warning](./docs/api-rate-limite-message.png)
 
 ## ⚡ github api documentation
 
