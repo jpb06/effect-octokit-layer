@@ -17,7 +17,8 @@ export const getRepoLanguages = (args: GetRepoLanguagesArgs) =>
     Effect.flatMap((octokit) =>
       pipe(
         Effect.tryPromise({
-          try: () => octokit.request('GET /repos/{owner}/{repo}/languages'),
+          try: () =>
+            octokit.request('GET /repos/{owner}/{repo}/languages', args),
           catch: handleOctokitRequestError,
         }),
         Effect.catchTag('retry-after', warnOnRetryAndFailWithApiRateLimitError),
