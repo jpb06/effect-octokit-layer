@@ -1,3 +1,7 @@
+export * from './languages/get-repo-languages.js';
+export * from './tags/get-repo-tags.js';
+export * from './releases/get-repo-releases.js';
+
 export * from './issues/comments/get-all/get-issue-comments.js';
 export * from './issues/get-all/get-repo-issues.js';
 export * from './issues/get-one/get-issue.js';
