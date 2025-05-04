@@ -19,6 +19,7 @@ vi.mock('@octokit/core');
 describe('getUserReposPage effect', () => {
   const args: GetUserReposPageArgs = {
     username: 'cool',
+    type: 'all',
     page: 1,
   };
 

@@ -12,6 +12,7 @@ vi.mock('@octokit/core');
 describe('getUserRepositories effect', () => {
   const args: GetUserRepositoriesArgs = {
     username: 'yolo',
+    type: 'all',
   };
 
   beforeEach(() => {

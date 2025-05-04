@@ -9,6 +9,7 @@ import type {
   UserOrgsResult,
   UserProfileResult,
   UserPullRequestsResult,
+  UserReposType,
   UserRepositoriesResult,
 } from '@implementation';
 
@@ -78,9 +79,10 @@ export const usersApi = (username: string) => ({
    * https://docs.github.com/en/rest/repos/repos#list-repositories-for-a-user
    */
   repos: (
+    type: UserReposType,
     concurrency = defaultConcurrency,
   ): Effect.Effect<UserRepositoriesResult, LayerErrors, Octokit> =>
     tapLayer(Context, ({ getUserRepositories }) =>
-      getUserRepositories({ username, concurrency }),
+      getUserRepositories({ username, type, concurrency }),
     ),
 });
