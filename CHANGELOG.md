@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.9.0](https://github.com/jpb06/effect-octokit-layer/compare/v1.8.2...v1.9.0) (2025-05-05)
+
+
+### Features
+
+* reviewed pull requests getter ([#74](https://github.com/jpb06/effect-octokit-layer/issues/74)) ([8c5b342](https://github.com/jpb06/effect-octokit-layer/commit/8c5b342a3a441901e3a3817eef54619a3b685bc7))
+* **search api:** add option to only fetch first page ([#76](https://github.com/jpb06/effect-octokit-layer/issues/76)) ([cac1b1c](https://github.com/jpb06/effect-octokit-layer/commit/cac1b1c608c394e3064cf927f87d67ffd0b45ab3))
+
 ## [1.8.2](https://github.com/jpb06/effect-octokit-layer/compare/v1.8.1...v1.8.2) (2025-05-05)
 
 
