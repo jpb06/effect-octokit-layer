@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.2](https://github.com/jpb06/effect-octokit-layer/compare/v1.8.1...v1.8.2) (2025-05-05)
+
+
+### Bug Fixes
+
+* octokit errors not related with rate limit ([#71](https://github.com/jpb06/effect-octokit-layer/issues/71)) ([ed9c3e2](https://github.com/jpb06/effect-octokit-layer/commit/ed9c3e2b082cd6bcf0288dc6fe6183e33f43bccc))
+
 ## [1.8.1](https://github.com/jpb06/effect-octokit-layer/compare/v1.8.0...v1.8.1) (2025-05-04)
 
 
