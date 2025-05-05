@@ -6,14 +6,14 @@ import type { EffectResultSuccess } from '@types';
 import { findUserPullRequestsPage } from './find-user-pull-requests-page.js';
 import type { PullRequestState } from './pull-request-state.type.js';
 
-export interface findUserPullRequestsArgs {
+export interface FindUserPullRequestsArgs {
   username: string;
   state: PullRequestState;
   fetchOnlyFirstPage?: boolean;
   concurrency?: number;
 }
 
-const getPage = (args: findUserPullRequestsArgs) => (page: number) =>
+const getPage = (args: FindUserPullRequestsArgs) => (page: number) =>
   findUserPullRequestsPage({
     ...args,
     page,
@@ -22,7 +22,7 @@ const getPage = (args: findUserPullRequestsArgs) => (page: number) =>
 export const findUserPullRequests = ({
   fetchOnlyFirstPage,
   ...args
-}: findUserPullRequestsArgs) =>
+}: FindUserPullRequestsArgs) =>
   pipe(
     Effect.gen(function* () {
       if (fetchOnlyFirstPage === true) {
@@ -41,6 +41,6 @@ export const findUserPullRequests = ({
     }),
   );
 
-export type UserPullRequestsResult = EffectResultSuccess<
+export type UserPullRequestsSearchResult = EffectResultSuccess<
   typeof findUserPullRequests
 >;

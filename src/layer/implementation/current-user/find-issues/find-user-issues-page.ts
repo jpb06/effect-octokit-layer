@@ -1,12 +1,12 @@
 import { getOnePage } from '@implementation/generic';
 import type { EffectResultSuccess } from '@types';
 
-export interface findUserIssuesPageArgs {
+export interface FindUserIssuesPageArgs {
   username: string;
   page: number;
 }
 
-export const findUserIssuesPage = (args: findUserIssuesPageArgs) =>
+export const findUserIssuesPage = (args: FindUserIssuesPageArgs) =>
   getOnePage('find-user-issues-page', 'GET /search/issues', {
     ...args,
     q: `type:issue involves:${args.username}`,

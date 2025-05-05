@@ -5,13 +5,13 @@ import type { EffectResultSuccess } from '@types';
 
 import { findUserIssuesPage } from './find-user-issues-page.js';
 
-export interface findUserIssuesArgs {
+export interface FindUserIssuesArgs {
   username: string;
   fetchOnlyFirstPage?: boolean;
   concurrency?: number;
 }
 
-const getPage = (args: findUserIssuesArgs) => (page: number) =>
+const getPage = (args: FindUserIssuesArgs) => (page: number) =>
   findUserIssuesPage({
     ...args,
     page,
@@ -20,7 +20,7 @@ const getPage = (args: findUserIssuesArgs) => (page: number) =>
 export const findUserIssues = ({
   fetchOnlyFirstPage,
   ...args
-}: findUserIssuesArgs) =>
+}: FindUserIssuesArgs) =>
   pipe(
     Effect.gen(function* () {
       if (fetchOnlyFirstPage === true) {
@@ -39,4 +39,4 @@ export const findUserIssues = ({
     }),
   );
 
-export type UserIssuesResult = EffectResultSuccess<typeof findUserIssues>;
+export type UserIssuesSearchResult = EffectResultSuccess<typeof findUserIssues>;

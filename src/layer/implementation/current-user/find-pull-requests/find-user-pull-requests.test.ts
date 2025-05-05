@@ -9,12 +9,12 @@ import {
 } from '@tests/mock-data';
 import { octokitMock } from '@tests/mocks';
 
-import type { findUserPullRequestsArgs } from './find-user-pull-requests.js';
+import type { FindUserPullRequestsArgs } from './find-user-pull-requests.js';
 
 vi.mock('@octokit/core');
 
 describe('findUserPullRequests effect', () => {
-  const args: findUserPullRequestsArgs = {
+  const args: FindUserPullRequestsArgs = {
     username: 'cool',
     state: 'merged',
   };

@@ -4,13 +4,13 @@ import type { EffectResultSuccess } from '@types';
 import { Match } from 'effect';
 import type { PullRequestState } from './pull-request-state.type.js';
 
-export interface findUserPullRequestsPageArgs {
+export interface FindUserPullRequestsPageArgs {
   username: string;
   state: PullRequestState;
   page: number;
 }
 
-const getSearchParam = ({ state, username }: findUserPullRequestsPageArgs) =>
+const getSearchParam = ({ state, username }: FindUserPullRequestsPageArgs) =>
   Match.value(state).pipe(
     Match.when(
       'closed',
@@ -29,7 +29,7 @@ const getSearchParam = ({ state, username }: findUserPullRequestsPageArgs) =>
     Match.exhaustive,
   );
 
-export const findUserPullRequestsPage = (args: findUserPullRequestsPageArgs) =>
+export const findUserPullRequestsPage = (args: FindUserPullRequestsPageArgs) =>
   getOnePage('find-user-pull-requests-page', 'GET /search/issues', {
     ...args,
     q: getSearchParam(args),

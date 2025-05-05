@@ -3,12 +3,12 @@ import type { Effect } from 'effect';
 import { defaultConcurrency } from '@constants';
 import type {
   PullRequestState,
-  UserCommitsResult,
+  UserCommitsSearchResult,
   UserEventsResult,
-  UserIssuesResult,
+  UserIssuesSearchResult,
   UserOrgsResult,
   UserProfileResult,
-  UserPullRequestsResult,
+  UserPullRequestsSearchResult,
   UserReposType,
   UserRepositoriesResult,
 } from '@implementation';
@@ -40,7 +40,7 @@ export const usersApi = (username: string) => ({
   findIssues: (
     fetchOnlyFirstPage = false,
     concurrency = defaultConcurrency,
-  ): Effect.Effect<UserIssuesResult, LayerErrors, Octokit> =>
+  ): Effect.Effect<UserIssuesSearchResult, LayerErrors, Octokit> =>
     tapLayer(Context, ({ findUserIssues }) =>
       findUserIssues({ username, fetchOnlyFirstPage, concurrency }),
     ),
@@ -51,7 +51,7 @@ export const usersApi = (username: string) => ({
   findCommits: (
     fetchOnlyFirstPage = false,
     concurrency = defaultConcurrency,
-  ): Effect.Effect<UserCommitsResult, LayerErrors, Octokit> =>
+  ): Effect.Effect<UserCommitsSearchResult, LayerErrors, Octokit> =>
     tapLayer(Context, ({ findUserCommits }) =>
       findUserCommits({ username, fetchOnlyFirstPage, concurrency }),
     ),
@@ -62,7 +62,7 @@ export const usersApi = (username: string) => ({
   findPullRequests: (
     args: { state: PullRequestState; fetchOnlyFirstPage?: boolean },
     concurrency = defaultConcurrency,
-  ): Effect.Effect<UserPullRequestsResult, LayerErrors, Octokit> =>
+  ): Effect.Effect<UserPullRequestsSearchResult, LayerErrors, Octokit> =>
     tapLayer(Context, ({ findUserPullRequests }) =>
       findUserPullRequests({ username, ...args, concurrency }),
     ),

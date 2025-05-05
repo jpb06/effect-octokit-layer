@@ -13,12 +13,12 @@ import {
 } from '@tests/mock-data';
 import { octokitMock } from '@tests/mocks';
 
-import type { findUserCommitsPageArgs } from './find-user-commits-page.js';
+import type { FindUserCommitsPageArgs } from './find-user-commits-page.js';
 
 vi.mock('@octokit/core');
 
 describe('findUserCommitsPage effect', () => {
-  const args: findUserCommitsPageArgs = {
+  const args: FindUserCommitsPageArgs = {
     username: 'cool',
     page: 1,
   };

@@ -7,6 +7,9 @@ import type {
   CreatePullRequestReviewResult,
   DeletePullRequestCommentResult,
   DeletePullRequestReviewResult,
+  FindUserCommitsArgs,
+  FindUserIssuesArgs,
+  FindUserPullRequestsArgs,
   GetIssueArgs,
   GetIssueCommentsArgs,
   GetOrgRepositoriesArgs,
@@ -39,16 +42,13 @@ import type {
   RepoPullRequestsResult,
   RepoReleasesResult,
   RepoTagsResult,
-  UserCommitsResult,
+  UserCommitsSearchResult,
   UserEventsResult,
-  UserIssuesResult,
+  UserIssuesSearchResult,
   UserOrgsResult,
   UserProfileResult,
-  UserPullRequestsResult,
+  UserPullRequestsSearchResult,
   UserRepositoriesResult,
-  findUserCommitsArgs,
-  findUserIssuesArgs,
-  findUserPullRequestsArgs,
 } from '@implementation';
 
 export type LayerErrors =
@@ -64,17 +64,17 @@ export interface Octokit {
     username: string,
   ) => Effect.Effect<UserOrgsResult, LayerErrors, never>;
   readonly findUserCommits: (
-    args: findUserCommitsArgs,
-  ) => Effect.Effect<UserCommitsResult, LayerErrors, never>;
+    args: FindUserCommitsArgs,
+  ) => Effect.Effect<UserCommitsSearchResult, LayerErrors, never>;
   readonly getUserEvents: (
     args: GetUserEventsArgs,
   ) => Effect.Effect<UserEventsResult, LayerErrors, never>;
   readonly findUserIssues: (
-    args: findUserIssuesArgs,
-  ) => Effect.Effect<UserIssuesResult, LayerErrors, never>;
+    args: FindUserIssuesArgs,
+  ) => Effect.Effect<UserIssuesSearchResult, LayerErrors, never>;
   readonly findUserPullRequests: (
-    args: findUserPullRequestsArgs,
-  ) => Effect.Effect<UserPullRequestsResult, LayerErrors, never>;
+    args: FindUserPullRequestsArgs,
+  ) => Effect.Effect<UserPullRequestsSearchResult, LayerErrors, never>;
   readonly getOrgRepositories: (
     args: GetOrgRepositoriesArgs,
   ) => Effect.Effect<OrgRepositoriesResult, LayerErrors, never>;

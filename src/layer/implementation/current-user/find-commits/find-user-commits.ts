@@ -5,13 +5,13 @@ import type { EffectResultSuccess } from '@types';
 
 import { findUserCommitsPage } from './find-user-commits-page.js';
 
-export interface findUserCommitsArgs {
+export interface FindUserCommitsArgs {
   username: string;
   fetchOnlyFirstPage?: boolean;
   concurrency?: number;
 }
 
-const getPage = (args: findUserCommitsArgs) => (page: number) =>
+const getPage = (args: FindUserCommitsArgs) => (page: number) =>
   findUserCommitsPage({
     ...args,
     page,
@@ -20,7 +20,7 @@ const getPage = (args: findUserCommitsArgs) => (page: number) =>
 export const findUserCommits = ({
   fetchOnlyFirstPage,
   ...args
-}: findUserCommitsArgs) =>
+}: FindUserCommitsArgs) =>
   pipe(
     Effect.gen(function* () {
       if (fetchOnlyFirstPage === true) {
@@ -39,4 +39,6 @@ export const findUserCommits = ({
     }),
   );
 
-export type UserCommitsResult = EffectResultSuccess<typeof findUserCommits>;
+export type UserCommitsSearchResult = EffectResultSuccess<
+  typeof findUserCommits
+>;

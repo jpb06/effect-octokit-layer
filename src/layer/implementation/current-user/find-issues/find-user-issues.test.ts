@@ -9,12 +9,12 @@ import {
 } from '@tests/mock-data';
 import { octokitMock } from '@tests/mocks';
 
-import type { findUserIssuesArgs } from './find-user-issues.js';
+import type { FindUserIssuesArgs } from './find-user-issues.js';
 
 vi.mock('@octokit/core');
 
 describe('findUserIssues effect', () => {
-  const args: findUserIssuesArgs = {
+  const args: FindUserIssuesArgs = {
     username: 'cool',
   };
 
