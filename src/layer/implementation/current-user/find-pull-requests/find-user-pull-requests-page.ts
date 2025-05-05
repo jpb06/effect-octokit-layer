@@ -4,13 +4,13 @@ import type { EffectResultSuccess } from '@types';
 import { Match } from 'effect';
 import type { PullRequestState } from './pull-request-state.type.js';
 
-export interface GetUserPullRequestsPageArgs {
+export interface FindUserPullRequestsPageArgs {
   username: string;
   state: PullRequestState;
   page: number;
 }
 
-const getSearchParam = ({ state, username }: GetUserPullRequestsPageArgs) =>
+const getSearchParam = ({ state, username }: FindUserPullRequestsPageArgs) =>
   Match.value(state).pipe(
     Match.when(
       'closed',
@@ -29,8 +29,8 @@ const getSearchParam = ({ state, username }: GetUserPullRequestsPageArgs) =>
     Match.exhaustive,
   );
 
-export const getUserPullRequestsPage = (args: GetUserPullRequestsPageArgs) =>
-  getOnePage('get-user-pull-requests-page', 'GET /search/issues', {
+export const findUserPullRequestsPage = (args: FindUserPullRequestsPageArgs) =>
+  getOnePage('find-user-pull-requests-page', 'GET /search/issues', {
     ...args,
     q: getSearchParam(args),
     per_page: 100,
@@ -38,5 +38,5 @@ export const getUserPullRequestsPage = (args: GetUserPullRequestsPageArgs) =>
   });
 
 export type UserPullRequestsPageItems = EffectResultSuccess<
-  typeof getUserPullRequestsPage
+  typeof findUserPullRequestsPage
 >;

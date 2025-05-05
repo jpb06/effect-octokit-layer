@@ -7,6 +7,9 @@ import type {
   CreatePullRequestReviewResult,
   DeletePullRequestCommentResult,
   DeletePullRequestReviewResult,
+  FindUserCommitsArgs,
+  FindUserIssuesArgs,
+  FindUserPullRequestsArgs,
   GetIssueArgs,
   GetIssueCommentsArgs,
   GetOrgRepositoriesArgs,
@@ -20,10 +23,7 @@ import type {
   GetRepoPullRequestsCommentsArgs,
   GetRepoReleasesArgs,
   GetRepoTagsArgs,
-  GetUserCommitsArgs,
   GetUserEventsArgs,
-  GetUserIssuesArgs,
-  GetUserPullRequestsArgs,
   GetUserRepositoriesArgs,
   IssueCommentsResult,
   IssueResult,
@@ -42,12 +42,12 @@ import type {
   RepoPullRequestsResult,
   RepoReleasesResult,
   RepoTagsResult,
-  UserCommitsResult,
+  UserCommitsSearchResult,
   UserEventsResult,
-  UserIssuesResult,
+  UserIssuesSearchResult,
   UserOrgsResult,
   UserProfileResult,
-  UserPullRequestsResult,
+  UserPullRequestsSearchResult,
   UserRepositoriesResult,
 } from '@implementation';
 
@@ -63,18 +63,18 @@ export interface Octokit {
   readonly getUserOrgs: (
     username: string,
   ) => Effect.Effect<UserOrgsResult, LayerErrors, never>;
-  readonly getUserCommits: (
-    args: GetUserCommitsArgs,
-  ) => Effect.Effect<UserCommitsResult, LayerErrors, never>;
+  readonly findUserCommits: (
+    args: FindUserCommitsArgs,
+  ) => Effect.Effect<UserCommitsSearchResult, LayerErrors, never>;
   readonly getUserEvents: (
     args: GetUserEventsArgs,
   ) => Effect.Effect<UserEventsResult, LayerErrors, never>;
-  readonly getUserIssues: (
-    args: GetUserIssuesArgs,
-  ) => Effect.Effect<UserIssuesResult, LayerErrors, never>;
-  readonly getUserPullRequests: (
-    args: GetUserPullRequestsArgs,
-  ) => Effect.Effect<UserPullRequestsResult, LayerErrors, never>;
+  readonly findUserIssues: (
+    args: FindUserIssuesArgs,
+  ) => Effect.Effect<UserIssuesSearchResult, LayerErrors, never>;
+  readonly findUserPullRequests: (
+    args: FindUserPullRequestsArgs,
+  ) => Effect.Effect<UserPullRequestsSearchResult, LayerErrors, never>;
   readonly getOrgRepositories: (
     args: GetOrgRepositoriesArgs,
   ) => Effect.Effect<OrgRepositoriesResult, LayerErrors, never>;

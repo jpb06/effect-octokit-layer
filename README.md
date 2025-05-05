@@ -78,11 +78,11 @@ const [profile, repos, orgs, events, commits, issues, pullRequests] =
           // Get user events
           octokitUser.events(),
           // Get user commits via search (1000 results max)
-          octokitUser.commits(),
+          octokitUser.findCommits(),
           // Get user issues via search (1000 results max)
-          octokitUser.issues(),
+          octokitUser.findIssues(),
           // Get user merged pull requests via search (1000 results max)
-          octokitUser.pullRequests('merged'),
+          octokitUser.findPullRequests({ state: 'merged' }),
         ],
         // Fetch all these in parallel
         { concurrency: 'unbounded' }

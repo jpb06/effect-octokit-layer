@@ -3,12 +3,12 @@ import type { Effect } from 'effect';
 import { defaultConcurrency } from '@constants';
 import type {
   PullRequestState,
-  UserCommitsResult,
+  UserCommitsSearchResult,
   UserEventsResult,
-  UserIssuesResult,
+  UserIssuesSearchResult,
   UserOrgsResult,
   UserProfileResult,
-  UserPullRequestsResult,
+  UserPullRequestsSearchResult,
   UserReposType,
   UserRepositoriesResult,
 } from '@implementation';
@@ -37,32 +37,34 @@ export const usersApi = (username: string) => ({
    * Github documentation:
    * https://docs.github.com/en/rest/search/search?apiVersion=2022-11-28#search-issues-and-pull-requests
    */
-  issues: (
+  findIssues: (
+    fetchOnlyFirstPage = false,
     concurrency = defaultConcurrency,
-  ): Effect.Effect<UserIssuesResult, LayerErrors, Octokit> =>
-    tapLayer(Context, ({ getUserIssues }) =>
-      getUserIssues({ username, concurrency }),
+  ): Effect.Effect<UserIssuesSearchResult, LayerErrors, Octokit> =>
+    tapLayer(Context, ({ findUserIssues }) =>
+      findUserIssues({ username, fetchOnlyFirstPage, concurrency }),
     ),
   /**
    * Github documentation:
    * https://docs.github.com/en/rest/search/search?apiVersion=2022-11-28#search-commits
    */
-  commits: (
+  findCommits: (
+    fetchOnlyFirstPage = false,
     concurrency = defaultConcurrency,
-  ): Effect.Effect<UserCommitsResult, LayerErrors, Octokit> =>
-    tapLayer(Context, ({ getUserCommits }) =>
-      getUserCommits({ username, concurrency }),
+  ): Effect.Effect<UserCommitsSearchResult, LayerErrors, Octokit> =>
+    tapLayer(Context, ({ findUserCommits }) =>
+      findUserCommits({ username, fetchOnlyFirstPage, concurrency }),
     ),
   /**
    * Github documentation:
    * https://docs.github.com/en/rest/search/search?apiVersion=2022-11-28#search-issues-and-pull-requests
    */
-  pullRequests: (
-    state: PullRequestState,
+  findPullRequests: (
+    args: { state: PullRequestState; fetchOnlyFirstPage?: boolean },
     concurrency = defaultConcurrency,
-  ): Effect.Effect<UserPullRequestsResult, LayerErrors, Octokit> =>
-    tapLayer(Context, ({ getUserPullRequests }) =>
-      getUserPullRequests({ username, state, concurrency }),
+  ): Effect.Effect<UserPullRequestsSearchResult, LayerErrors, Octokit> =>
+    tapLayer(Context, ({ findUserPullRequests }) =>
+      findUserPullRequests({ username, ...args, concurrency }),
     ),
   /**
    * Github documentation:
