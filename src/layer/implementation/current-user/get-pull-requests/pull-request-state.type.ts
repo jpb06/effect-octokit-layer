@@ -1,1 +1,6 @@
-export type PullRequestState = 'closed' | 'open' | 'merged' | 'draft';
+export type PullRequestState =
+  | 'closed'
+  | 'open'
+  | 'merged'
+  | 'draft'
+  | 'reviewed';

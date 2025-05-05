@@ -25,6 +25,7 @@ const getSearchParam = ({ state, username }: GetUserPullRequestsPageArgs) =>
       'open',
       () => `type:pr author:${username} state:open draft:false`,
     ),
+    Match.when('reviewed', () => `type:pr reviewed-by:${username}`),
     Match.exhaustive,
   );
 
