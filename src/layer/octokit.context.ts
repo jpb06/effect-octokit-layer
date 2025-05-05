@@ -20,10 +20,7 @@ import type {
   GetRepoPullRequestsCommentsArgs,
   GetRepoReleasesArgs,
   GetRepoTagsArgs,
-  GetUserCommitsArgs,
   GetUserEventsArgs,
-  GetUserIssuesArgs,
-  GetUserPullRequestsArgs,
   GetUserRepositoriesArgs,
   IssueCommentsResult,
   IssueResult,
@@ -49,6 +46,9 @@ import type {
   UserProfileResult,
   UserPullRequestsResult,
   UserRepositoriesResult,
+  findUserCommitsArgs,
+  findUserIssuesArgs,
+  findUserPullRequestsArgs,
 } from '@implementation';
 
 export type LayerErrors =
@@ -63,17 +63,17 @@ export interface Octokit {
   readonly getUserOrgs: (
     username: string,
   ) => Effect.Effect<UserOrgsResult, LayerErrors, never>;
-  readonly getUserCommits: (
-    args: GetUserCommitsArgs,
+  readonly findUserCommits: (
+    args: findUserCommitsArgs,
   ) => Effect.Effect<UserCommitsResult, LayerErrors, never>;
   readonly getUserEvents: (
     args: GetUserEventsArgs,
   ) => Effect.Effect<UserEventsResult, LayerErrors, never>;
-  readonly getUserIssues: (
-    args: GetUserIssuesArgs,
+  readonly findUserIssues: (
+    args: findUserIssuesArgs,
   ) => Effect.Effect<UserIssuesResult, LayerErrors, never>;
-  readonly getUserPullRequests: (
-    args: GetUserPullRequestsArgs,
+  readonly findUserPullRequests: (
+    args: findUserPullRequestsArgs,
   ) => Effect.Effect<UserPullRequestsResult, LayerErrors, never>;
   readonly getOrgRepositories: (
     args: GetOrgRepositoriesArgs,

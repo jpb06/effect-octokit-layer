@@ -9,14 +9,13 @@ import {
 } from '@tests/mock-data';
 import { octokitMock } from '@tests/mocks';
 
-import type { GetUserPullRequestsArgs } from './get-user-pull-requests.js';
+import type { findUserCommitsArgs } from './find-user-commits.js';
 
 vi.mock('@octokit/core');
 
-describe('getUserPullRequests effect', () => {
-  const args: GetUserPullRequestsArgs = {
+describe('findUserCommits effect', () => {
+  const args: findUserCommitsArgs = {
     username: 'cool',
-    state: 'merged',
   };
 
   beforeEach(() => {
@@ -31,9 +30,9 @@ describe('getUserPullRequests effect', () => {
       ...octokitRequestResponseHeaders(count),
     });
 
-    const { getUserPullRequests } = await import('./get-user-pull-requests.js');
+    const { findUserCommits } = await import('./find-user-commits.js');
 
-    const task = getUserPullRequests(args);
+    const task = findUserCommits(args);
     const result = await Effect.runPromise(task);
 
     expect(result.count).toBe(count);
@@ -47,9 +46,9 @@ describe('getUserPullRequests effect', () => {
       headers: {},
     });
 
-    const { getUserPullRequests } = await import('./get-user-pull-requests.js');
+    const { findUserCommits } = await import('./find-user-commits.js');
 
-    const task = getUserPullRequests(args);
+    const task = findUserCommits(args);
     const result = await Effect.runPromise(task);
 
     expect(result).toStrictEqual({
@@ -68,9 +67,9 @@ describe('getUserPullRequests effect', () => {
       },
     );
 
-    const { getUserPullRequests } = await import('./get-user-pull-requests.js');
+    const { findUserCommits } = await import('./find-user-commits.js');
 
-    const task = pipe(getUserPullRequests(args), Effect.flip);
+    const task = pipe(findUserCommits(args), Effect.flip);
     const result = await Effect.runPromise(task);
 
     expect(result).toBeInstanceOf(GithubApiError);

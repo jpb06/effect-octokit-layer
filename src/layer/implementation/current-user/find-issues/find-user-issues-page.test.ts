@@ -13,12 +13,12 @@ import {
 } from '@tests/mock-data';
 import { octokitMock } from '@tests/mocks';
 
-import type { GetUserIssuesPageArgs } from './get-user-issues-page.js';
+import type { findUserIssuesPageArgs } from './find-user-issues-page.js';
 
 vi.mock('@octokit/core');
 
-describe('getUserIssuesPage effect', () => {
-  const args: GetUserIssuesPageArgs = {
+describe('findUserIssuesPage effect', () => {
+  const args: findUserIssuesPageArgs = {
     username: 'cool',
     page: 1,
   };
@@ -31,9 +31,9 @@ describe('getUserIssuesPage effect', () => {
   it('should fail if github token env variable is not set', async () => {
     vi.unstubAllEnvs();
 
-    const { getUserIssuesPage } = await import('./get-user-issues-page.js');
+    const { findUserIssuesPage } = await import('./find-user-issues-page.js');
 
-    const task = pipe(getUserIssuesPage(args), Effect.flip);
+    const task = pipe(findUserIssuesPage(args), Effect.flip);
     const result = await Effect.runPromise(task);
 
     expect(result).toBeInstanceOf(GithubApiError);
@@ -46,9 +46,9 @@ describe('getUserIssuesPage effect', () => {
       ...octokitRequestResponseHeaders(25),
     });
 
-    const { getUserIssuesPage } = await import('./get-user-issues-page.js');
+    const { findUserIssuesPage } = await import('./find-user-issues-page.js');
 
-    const task = getUserIssuesPage(args);
+    const task = findUserIssuesPage(args);
     const result = await runPromise(task);
 
     expect(result.data).toStrictEqual(mockData);
@@ -58,9 +58,9 @@ describe('getUserIssuesPage effect', () => {
   it('should fail with an Octokit request error', async () => {
     await octokitMock.requestFail(new GithubApiError({ cause: 'Oh no' }));
 
-    const { getUserIssuesPage } = await import('./get-user-issues-page.js');
+    const { findUserIssuesPage } = await import('./find-user-issues-page.js');
 
-    const task = pipe(getUserIssuesPage(args), Effect.flip);
+    const task = pipe(findUserIssuesPage(args), Effect.flip);
     const result = await Effect.runPromise(pipe(task));
 
     expect(result).toBeInstanceOf(GithubApiError);
@@ -73,9 +73,9 @@ describe('getUserIssuesPage effect', () => {
 
     const { warnMock, ConsoleTestLayer } = makeConsoleTestLayer();
 
-    const { getUserIssuesPage } = await import('./get-user-issues-page.js');
+    const { findUserIssuesPage } = await import('./find-user-issues-page.js');
 
-    const task = pipe(getUserIssuesPage(args), ConsoleTestLayer);
+    const task = pipe(findUserIssuesPage(args), ConsoleTestLayer);
     const effect = delayEffectAndFlip(task, Duration.seconds(40));
     const result = await Effect.runPromise(effect);
 
@@ -97,9 +97,9 @@ describe('getUserIssuesPage effect', () => {
 
     const { warnMock, ConsoleTestLayer } = makeConsoleTestLayer();
 
-    const { getUserIssuesPage } = await import('./get-user-issues-page.js');
+    const { findUserIssuesPage } = await import('./find-user-issues-page.js');
 
-    const task = pipe(getUserIssuesPage(args), ConsoleTestLayer);
+    const task = pipe(findUserIssuesPage(args), ConsoleTestLayer);
     const effect = delayEffect(task, Duration.seconds(40));
     const result = await runPromise(effect);
 
