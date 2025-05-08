@@ -19,7 +19,7 @@ describe('getOrgRepositories effect', () => {
     vi.stubEnv('GITHUB_TOKEN', 'GITHUB_TOKEN_VALUE');
   });
 
-  it('should retun user repos', async () => {
+  it('should return user repos', async () => {
     const count = 25;
     const mock = await octokitMock.request({
       data: mockData,
@@ -35,7 +35,7 @@ describe('getOrgRepositories effect', () => {
     expect(mock).toHaveBeenCalledTimes(count);
   });
 
-  it('should retun org repos', async () => {
+  it('should return org repos', async () => {
     const count = 25;
     const mock = await octokitMock.request({
       data: mockData,

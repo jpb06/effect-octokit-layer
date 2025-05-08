@@ -28,7 +28,7 @@ describe('getUserReposPage effect', () => {
     vi.stubEnv('GITHUB_TOKEN', 'GITHUB_TOKEN_VALUE');
   });
 
-  it('should retun data with links', async () => {
+  it('should return data with links', async () => {
     await octokitMock.requestOnce({
       data: mockData,
       ...octokitRequestResponseHeaders(25),

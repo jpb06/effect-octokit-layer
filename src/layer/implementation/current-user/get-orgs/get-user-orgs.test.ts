@@ -22,7 +22,7 @@ describe('getUserOrgs effect', () => {
     vi.stubEnv('GITHUB_TOKEN', 'GITHUB_TOKEN_VALUE');
   });
 
-  it('should retun data with links', async () => {
+  it('should return data with links', async () => {
     octokitMock.requestOnce({
       data: mockData,
     });

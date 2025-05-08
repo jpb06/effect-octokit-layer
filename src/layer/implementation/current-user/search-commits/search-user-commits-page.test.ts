@@ -44,7 +44,7 @@ describe('searchUserCommitsPage effect', () => {
     expect((result as Error).message).toBe('GITHUB_TOKEN not set');
   });
 
-  it('should retun data with links', async () => {
+  it('should return data with links', async () => {
     await octokitMock.requestOnce({
       data: mockData,
       ...octokitRequestResponseHeaders(25),

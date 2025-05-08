@@ -24,7 +24,7 @@ describe('searchUserCommits effect', () => {
     vi.stubEnv('GITHUB_TOKEN', 'GITHUB_TOKEN_VALUE');
   });
 
-  it('should retun multiple pages data', async () => {
+  it('should return multiple pages data', async () => {
     const count = 25;
     const mock = await octokitMock.request({
       data: { ...searchResultmockData, total_count: count },

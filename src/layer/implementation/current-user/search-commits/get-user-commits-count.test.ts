@@ -1,4 +1,5 @@
 import { Duration, Effect, pipe } from 'effect';
+import { runPromise } from 'effect-errors';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { retryWarningMessage } from '@constants';
@@ -6,21 +7,19 @@ import { ApiRateLimitError, GithubApiError } from '@errors';
 import { delayEffect, delayEffectAndFlip } from '@tests/effects';
 import { makeConsoleTestLayer } from '@tests/layers';
 import {
-  mockData,
   octokitRequestErrorWithRetryAfter,
   octokitRequestResponseHeaders,
 } from '@tests/mock-data';
 import { octokitMock } from '@tests/mocks';
 
-import type { GetRepoPullRequestsPageArgs } from './get-repo-pull-requests-page.js';
+import type { GetUserCommitsCountArgs } from './get-user-commits-count.js';
 
 vi.mock('@octokit/core');
 
-describe('getRepoPullRequestsPage effect', () => {
-  const args: GetRepoPullRequestsPageArgs = {
-    owner: 'cool',
-    repo: 'cool',
-    page: 1,
+describe('getUserCommitsCount effect', () => {
+  const count = 2000;
+  const args: GetUserCommitsCountArgs = {
+    username: 'cool',
   };
 
   beforeEach(() => {
@@ -28,48 +27,55 @@ describe('getRepoPullRequestsPage effect', () => {
     vi.stubEnv('GITHUB_TOKEN', 'GITHUB_TOKEN_VALUE');
   });
 
-  it('should return data with links', async () => {
+  it('should fail if github token env variable is not set', async () => {
+    vi.unstubAllEnvs();
+
+    const { getUserCommitsCount } = await import('./get-user-commits-count.js');
+
+    const task = pipe(getUserCommitsCount(args), Effect.flip);
+    const result = await Effect.runPromise(task);
+
+    expect(result).toBeInstanceOf(GithubApiError);
+    expect((result as Error).message).toBe('GITHUB_TOKEN not set');
+  });
+
+  it('should return count', async () => {
     await octokitMock.requestOnce({
-      data: mockData,
+      data: {
+        total_count: count,
+      },
       ...octokitRequestResponseHeaders(25),
     });
 
-    const { getRepoPullRequestsPage } = await import(
-      './get-repo-pull-requests-page.js'
-    );
+    const { getUserCommitsCount } = await import('./get-user-commits-count.js');
 
-    const task = getRepoPullRequestsPage(args);
-    const result = await Effect.runPromise(task);
+    const task = getUserCommitsCount(args);
+    const result = await runPromise(task);
 
-    expect(result.data).toStrictEqual(mockData);
-    expect(result.links).toStrictEqual({ next: 2, last: 25 });
+    expect(result).toStrictEqual(count);
   });
 
   it('should fail with an Octokit request error', async () => {
     await octokitMock.requestFail(new GithubApiError({ cause: 'Oh no' }));
 
-    const { getRepoPullRequestsPage } = await import(
-      './get-repo-pull-requests-page.js'
-    );
+    const { getUserCommitsCount } = await import('./get-user-commits-count.js');
 
-    const task = pipe(getRepoPullRequestsPage(args), Effect.flip);
-    const result = await Effect.runPromise(task);
+    const task = pipe(getUserCommitsCount(args), Effect.flip);
+    const result = await Effect.runPromise(pipe(task));
 
     expect(result).toBeInstanceOf(GithubApiError);
   });
 
-  it('should fail if an api rate limit error', async () => {
+  it('should fail with an api rate limit error', async () => {
     const retryDelay = 20;
     const error = octokitRequestErrorWithRetryAfter(retryDelay);
     await octokitMock.requestFail(error);
 
     const { warnMock, ConsoleTestLayer } = makeConsoleTestLayer();
 
-    const { getRepoPullRequestsPage } = await import(
-      './get-repo-pull-requests-page.js'
-    );
+    const { getUserCommitsCount } = await import('./get-user-commits-count.js');
 
-    const task = pipe(getRepoPullRequestsPage(args), ConsoleTestLayer);
+    const task = pipe(getUserCommitsCount(args), ConsoleTestLayer);
     const effect = delayEffectAndFlip(task, Duration.seconds(40));
     const result = await Effect.runPromise(effect);
 
@@ -85,22 +91,21 @@ describe('getRepoPullRequestsPage effect', () => {
     const retryDelay = 20;
     const error = octokitRequestErrorWithRetryAfter(retryDelay);
     await octokitMock.requestFailAndThenSucceed(error, {
-      data: mockData,
+      data: {
+        total_count: count,
+      },
       ...octokitRequestResponseHeaders(25),
     });
 
     const { warnMock, ConsoleTestLayer } = makeConsoleTestLayer();
 
-    const { getRepoPullRequestsPage } = await import(
-      './get-repo-pull-requests-page.js'
-    );
+    const { getUserCommitsCount } = await import('./get-user-commits-count.js');
 
-    const task = pipe(getRepoPullRequestsPage(args), ConsoleTestLayer);
+    const task = pipe(getUserCommitsCount(args), ConsoleTestLayer);
     const effect = delayEffect(task, Duration.seconds(40));
-    const result = await Effect.runPromise(effect);
+    const result = await runPromise(effect);
 
     expect(warnMock).toHaveBeenCalledTimes(1);
-    expect(result.data).toStrictEqual(mockData);
-    expect(result.links).toStrictEqual({ next: 2, last: 25 });
+    expect(result).toStrictEqual(count);
   });
 });
