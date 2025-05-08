@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.10.1](https://github.com/jpb06/effect-octokit-layer/compare/v1.10.0...v1.10.1) (2025-05-08)
+
+
+### Bug Fixes
+
+* missing result types in lib export ([#86](https://github.com/jpb06/effect-octokit-layer/issues/86)) ([30617a1](https://github.com/jpb06/effect-octokit-layer/commit/30617a108e8b358dc7966d7fcbf643fb795fe38d))
+
 ## [1.10.0](https://github.com/jpb06/effect-octokit-layer/compare/v1.9.1...v1.10.0) (2025-05-08)
 
 
