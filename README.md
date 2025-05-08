@@ -7,6 +7,7 @@
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=jpb06_effect-octokit-layer&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=jpb06_effect-octokit-layer)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=jpb06_effect-octokit-layer&metric=security_rating)](https://sonarcloud.io/dashboard?id=jpb06_effect-octokit-layer)
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=jpb06_effect-octokit-layer&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=jpb06_effect-octokit-layer)
+![Vitest coverage](./badges/coverage-total.svg)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=jpb06_effect-octokit-layer&metric=coverage)](https://sonarcloud.io/dashboard?id=jpb06_effect-octokit-layer)
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=jpb06_effect-octokit-layer&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=jpb06_effect-octokit-layer)
 [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=jpb06_effect-octokit-layer&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=jpb06_effect-octokit-layer)
@@ -78,11 +79,11 @@ const [profile, repos, orgs, events, commits, issues, pullRequests] =
           // Get user events
           octokitUser.events(),
           // Get user commits via search (1000 results max)
-          octokitUser.findCommits(),
+          octokitUser.searchCommits(''),
           // Get user issues via search (1000 results max)
-          octokitUser.findIssues(),
+          octokitUser.searchIssues(''),
           // Get user merged pull requests via search (1000 results max)
-          octokitUser.findPullRequests({ state: 'merged' }),
+          octokitUser.searchPullRequests('merged', ''),
         ],
         // Fetch all these in parallel
         { concurrency: 'unbounded' }
