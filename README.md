@@ -65,32 +65,46 @@ import { OctokitLayer, OctokitLayerLive } from 'effect-octokit-layer';
 
 const octokitUser = OctokitLayer.user('jpb06');
 
-const [profile, repos, orgs, events, commits, issues, pullRequests] =
-  await Effect.runPromise(
-    pipe(
-      Effect.all(
-        [
-          // Get user profile
-          octokitUser.profile(),
-          // Get user repos
-          octokitUser.repos('all'),
-          // Get user organizations
-          octokitUser.orgs(),
-          // Get user events
-          octokitUser.events(),
-          // Get user commits via search (1000 results max)
-          octokitUser.searchCommits(''),
-          // Get user issues via search (1000 results max)
-          octokitUser.searchIssues(''),
-          // Get user merged pull requests via search (1000 results max)
-          octokitUser.searchPullRequests('merged', ''),
-        ],
-        // Fetch all these in parallel
-        { concurrency: 'unbounded' }
-      ),
-      Effect.provide(OctokitLayerLive)
-    )
-  );
+const [
+  profile,
+  repos,
+  orgs,
+  events,
+  commits,
+  issues,
+  pullRequests,
+  userPullRequestsCount,
+  userCommitsCount,
+  userIssuesCount,
+] = await Effect.runPromise(
+  pipe(
+    Effect.all(
+      [
+        // Get user profile
+        octokitUser.profile(),
+        // Get user repos
+        octokitUser.repos('all'),
+        // Get user organizations
+        octokitUser.orgs(),
+        // Get user events
+        octokitUser.events(),
+        // Search in user commits (1000 results max)
+        octokitUser.searchCommits(''),
+        // Search in user issues (1000 results max)
+        octokitUser.searchIssues(''),
+        // Search in user merged pull requests (1000 results max)
+        octokitUser.searchPullRequests('merged', ''),
+        // Get entities count
+        octokitUser.getPullRequestsCount('draft'),
+        octokitUser.getCommitsCount(),
+        octokitUser.getIssuesCount(),
+      ],
+      // Fetch all these in parallel
+      { concurrency: 'unbounded' }
+    ),
+    Effect.provide(OctokitLayerLive)
+  )
+);
 ```
 
 ### 🔶 Organizations
