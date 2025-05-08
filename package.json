@@ -53,7 +53,7 @@
     "sync-icons": "bun generateReadmeIcons -h 50"
   },
   "dependencies": {
-    "@effect/platform": "0.80.19",
+    "@effect/platform": "0.80.21",
     "@octokit/core": "6.1.5",
     "date-fns": "4.1.0",
     "picocolors": "1.1.1"
