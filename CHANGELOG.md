@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.10.0](https://github.com/jpb06/effect-octokit-layer/compare/v1.9.1...v1.10.0) (2025-05-08)
+
+
+### Features
+
+* renaming search related function and adding dedicated functions to get entities count ([#85](https://github.com/jpb06/effect-octokit-layer/issues/85)) ([5ae7edd](https://github.com/jpb06/effect-octokit-layer/commit/5ae7edd390c50525a77a9fce5e2c81a112fd1446))
+
+
+### Bug Fixes
+
+* **deps:** update dependency @effect/platform to v0.80.21 ([#82](https://github.com/jpb06/effect-octokit-layer/issues/82)) ([1ffe99a](https://github.com/jpb06/effect-octokit-layer/commit/1ffe99a3b00d95a6a874e5291b9f74a8c8216d6c))
+* **deps:** update dependency effect to v3.14.20 ([#81](https://github.com/jpb06/effect-octokit-layer/issues/81)) ([036a674](https://github.com/jpb06/effect-octokit-layer/commit/036a67438f965431ebd562460184214b9265ea2c))
+
 ## [1.9.1](https://github.com/jpb06/effect-octokit-layer/compare/v1.9.0...v1.9.1) (2025-05-06)
 
 
