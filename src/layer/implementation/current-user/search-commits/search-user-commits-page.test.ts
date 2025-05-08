@@ -13,14 +13,16 @@ import {
 } from '@tests/mock-data';
 import { octokitMock } from '@tests/mocks';
 
-import type { FindUserCommitsPageArgs } from './find-user-commits-page.js';
+import type { SearchUserCommitsPageArgs } from './search-user-commits-page.js';
 
 vi.mock('@octokit/core');
 
-describe('findUserCommitsPage effect', () => {
-  const args: FindUserCommitsPageArgs = {
+describe('searchUserCommitsPage effect', () => {
+  const args: SearchUserCommitsPageArgs = {
     username: 'cool',
+    query: '',
     page: 1,
+    perPage: 1,
   };
 
   beforeEach(() => {
@@ -31,9 +33,11 @@ describe('findUserCommitsPage effect', () => {
   it('should fail if github token env variable is not set', async () => {
     vi.unstubAllEnvs();
 
-    const { findUserCommitsPage } = await import('./find-user-commits-page.js');
+    const { searchUserCommitsPage } = await import(
+      './search-user-commits-page.js'
+    );
 
-    const task = pipe(findUserCommitsPage(args), Effect.flip);
+    const task = pipe(searchUserCommitsPage(args), Effect.flip);
     const result = await Effect.runPromise(task);
 
     expect(result).toBeInstanceOf(GithubApiError);
@@ -46,9 +50,11 @@ describe('findUserCommitsPage effect', () => {
       ...octokitRequestResponseHeaders(25),
     });
 
-    const { findUserCommitsPage } = await import('./find-user-commits-page.js');
+    const { searchUserCommitsPage } = await import(
+      './search-user-commits-page.js'
+    );
 
-    const task = findUserCommitsPage(args);
+    const task = searchUserCommitsPage(args);
     const result = await runPromise(task);
 
     expect(result.data).toStrictEqual(mockData);
@@ -58,9 +64,11 @@ describe('findUserCommitsPage effect', () => {
   it('should fail with an Octokit request error', async () => {
     await octokitMock.requestFail(new GithubApiError({ cause: 'Oh no' }));
 
-    const { findUserCommitsPage } = await import('./find-user-commits-page.js');
+    const { searchUserCommitsPage } = await import(
+      './search-user-commits-page.js'
+    );
 
-    const task = pipe(findUserCommitsPage(args), Effect.flip);
+    const task = pipe(searchUserCommitsPage(args), Effect.flip);
     const result = await Effect.runPromise(pipe(task));
 
     expect(result).toBeInstanceOf(GithubApiError);
@@ -73,9 +81,11 @@ describe('findUserCommitsPage effect', () => {
 
     const { warnMock, ConsoleTestLayer } = makeConsoleTestLayer();
 
-    const { findUserCommitsPage } = await import('./find-user-commits-page.js');
+    const { searchUserCommitsPage } = await import(
+      './search-user-commits-page.js'
+    );
 
-    const task = pipe(findUserCommitsPage(args), ConsoleTestLayer);
+    const task = pipe(searchUserCommitsPage(args), ConsoleTestLayer);
     const effect = delayEffectAndFlip(task, Duration.seconds(40));
     const result = await Effect.runPromise(effect);
 
@@ -97,9 +107,11 @@ describe('findUserCommitsPage effect', () => {
 
     const { warnMock, ConsoleTestLayer } = makeConsoleTestLayer();
 
-    const { findUserCommitsPage } = await import('./find-user-commits-page.js');
+    const { searchUserCommitsPage } = await import(
+      './search-user-commits-page.js'
+    );
 
-    const task = pipe(findUserCommitsPage(args), ConsoleTestLayer);
+    const task = pipe(searchUserCommitsPage(args), ConsoleTestLayer);
     const effect = delayEffect(task, Duration.seconds(40));
     const result = await runPromise(effect);
 

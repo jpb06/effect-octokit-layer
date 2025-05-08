@@ -36,6 +36,7 @@ jobs:
         uses: jpb06/coverage-badges-action@latest
         with:
           badges-icon: vitest
+          badges-labels-prefix: "Vitest coverage"
           commit-message: "chore: updating coverage badges"
           commit-user: jpb06
           commit-user-email: jpb.06@outlook.com
