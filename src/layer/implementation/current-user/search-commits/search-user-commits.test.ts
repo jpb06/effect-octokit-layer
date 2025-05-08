@@ -9,13 +9,14 @@ import {
 } from '@tests/mock-data';
 import { octokitMock } from '@tests/mocks';
 
-import type { FindUserIssuesArgs } from './find-user-issues.js';
+import type { SearchUserCommitsArgs } from './search-user-commits.js';
 
 vi.mock('@octokit/core');
 
-describe('findUserIssues effect', () => {
-  const args: FindUserIssuesArgs = {
+describe('searchUserCommits effect', () => {
+  const args: SearchUserCommitsArgs = {
     username: 'cool',
+    query: '',
   };
 
   beforeEach(() => {
@@ -23,16 +24,16 @@ describe('findUserIssues effect', () => {
     vi.stubEnv('GITHUB_TOKEN', 'GITHUB_TOKEN_VALUE');
   });
 
-  it('should retun multiple pages data', async () => {
+  it('should return multiple pages data', async () => {
     const count = 25;
     const mock = await octokitMock.request({
       data: { ...searchResultmockData, total_count: count },
       ...octokitRequestResponseHeaders(count),
     });
 
-    const { findUserIssues } = await import('./find-user-issues.js');
+    const { searchUserCommits } = await import('./search-user-commits.js');
 
-    const task = findUserIssues(args);
+    const task = searchUserCommits(args);
     const result = await Effect.runPromise(task);
 
     expect(result.count).toBe(count);
@@ -46,9 +47,9 @@ describe('findUserIssues effect', () => {
       headers: {},
     });
 
-    const { findUserIssues } = await import('./find-user-issues.js');
+    const { searchUserCommits } = await import('./search-user-commits.js');
 
-    const task = findUserIssues(args);
+    const task = searchUserCommits(args);
     const result = await Effect.runPromise(task);
 
     expect(result).toStrictEqual({
@@ -67,9 +68,9 @@ describe('findUserIssues effect', () => {
       },
     );
 
-    const { findUserIssues } = await import('./find-user-issues.js');
+    const { searchUserCommits } = await import('./search-user-commits.js');
 
-    const task = pipe(findUserIssues(args), Effect.flip);
+    const task = pipe(searchUserCommits(args), Effect.flip);
     const result = await Effect.runPromise(task);
 
     expect(result).toBeInstanceOf(GithubApiError);

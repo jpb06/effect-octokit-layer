@@ -7,9 +7,6 @@ import type {
   CreatePullRequestReviewResult,
   DeletePullRequestCommentResult,
   DeletePullRequestReviewResult,
-  FindUserCommitsArgs,
-  FindUserIssuesArgs,
-  FindUserPullRequestsArgs,
   GetIssueArgs,
   GetIssueCommentsArgs,
   GetOrgRepositoriesArgs,
@@ -23,7 +20,10 @@ import type {
   GetRepoPullRequestsCommentsArgs,
   GetRepoReleasesArgs,
   GetRepoTagsArgs,
+  GetUserCommitsCountArgs,
   GetUserEventsArgs,
+  GetUserIssuesCountArgs,
+  GetUserPullRequestsCountArgs,
   GetUserRepositoriesArgs,
   IssueCommentsResult,
   IssueResult,
@@ -42,11 +42,17 @@ import type {
   RepoPullRequestsResult,
   RepoReleasesResult,
   RepoTagsResult,
+  SearchUserCommitsArgs,
+  SearchUserIssuesArgs,
+  SearchUserPullRequestsArgs,
+  UserCommitsCountResult,
   UserCommitsSearchResult,
   UserEventsResult,
+  UserIssuesCountResult,
   UserIssuesSearchResult,
   UserOrgsResult,
   UserProfileResult,
+  UserPullRequestsCountResult,
   UserPullRequestsSearchResult,
   UserRepositoriesResult,
 } from '@implementation';
@@ -63,18 +69,27 @@ export interface Octokit {
   readonly getUserOrgs: (
     username: string,
   ) => Effect.Effect<UserOrgsResult, LayerErrors, never>;
-  readonly findUserCommits: (
-    args: FindUserCommitsArgs,
-  ) => Effect.Effect<UserCommitsSearchResult, LayerErrors, never>;
   readonly getUserEvents: (
     args: GetUserEventsArgs,
   ) => Effect.Effect<UserEventsResult, LayerErrors, never>;
-  readonly findUserIssues: (
-    args: FindUserIssuesArgs,
+  readonly searchUserCommits: (
+    args: SearchUserCommitsArgs,
+  ) => Effect.Effect<UserCommitsSearchResult, LayerErrors, never>;
+  readonly searchUserIssues: (
+    args: SearchUserIssuesArgs,
   ) => Effect.Effect<UserIssuesSearchResult, LayerErrors, never>;
-  readonly findUserPullRequests: (
-    args: FindUserPullRequestsArgs,
+  readonly searchUserPullRequests: (
+    args: SearchUserPullRequestsArgs,
   ) => Effect.Effect<UserPullRequestsSearchResult, LayerErrors, never>;
+  readonly getUserCommitsCount: (
+    args: GetUserCommitsCountArgs,
+  ) => Effect.Effect<UserCommitsCountResult, LayerErrors, never>;
+  readonly getUserIssuesCount: (
+    args: GetUserIssuesCountArgs,
+  ) => Effect.Effect<UserIssuesCountResult, LayerErrors, never>;
+  readonly getUserPullRequestsCount: (
+    args: GetUserPullRequestsCountArgs,
+  ) => Effect.Effect<UserPullRequestsCountResult, LayerErrors, never>;
   readonly getOrgRepositories: (
     args: GetOrgRepositoriesArgs,
   ) => Effect.Effect<OrgRepositoriesResult, LayerErrors, never>;

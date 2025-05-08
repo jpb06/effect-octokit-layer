@@ -3,24 +3,28 @@ import { Effect, pipe } from 'effect';
 import { getAllSearchPages } from '@implementation/generic';
 import type { EffectResultSuccess } from '@types';
 
-import { findUserCommitsPage } from './find-user-commits-page.js';
+import type { PullRequestState } from './pull-request-state.type.js';
+import { searchUserPullRequestsPage } from './search-user-pull-requests-page.js';
 
-export interface FindUserCommitsArgs {
+export interface SearchUserPullRequestsArgs {
   username: string;
+  state: PullRequestState;
+  query: string;
   fetchOnlyFirstPage?: boolean;
   concurrency?: number;
 }
 
-const getPage = (args: FindUserCommitsArgs) => (page: number) =>
-  findUserCommitsPage({
+const getPage = (args: SearchUserPullRequestsArgs) => (page: number) =>
+  searchUserPullRequestsPage({
     ...args,
     page,
+    perPage: 100,
   });
 
-export const findUserCommits = ({
+export const searchUserPullRequests = ({
   fetchOnlyFirstPage,
   ...args
-}: FindUserCommitsArgs) =>
+}: SearchUserPullRequestsArgs) =>
   pipe(
     Effect.gen(function* () {
       if (fetchOnlyFirstPage === true) {
@@ -34,11 +38,11 @@ export const findUserCommits = ({
 
       return yield* getAllSearchPages(getPage, args);
     }),
-    Effect.withSpan('find-user-commits', {
+    Effect.withSpan('search-user-pull-requests', {
       attributes: { ...args },
     }),
   );
 
-export type UserCommitsSearchResult = EffectResultSuccess<
-  typeof findUserCommits
+export type UserPullRequestsSearchResult = EffectResultSuccess<
+  typeof searchUserPullRequests
 >;

@@ -7,21 +7,20 @@ import { ApiRateLimitError, GithubApiError } from '@errors';
 import { delayEffect, delayEffectAndFlip } from '@tests/effects';
 import { makeConsoleTestLayer } from '@tests/layers';
 import {
-  mockData,
   octokitRequestErrorWithRetryAfter,
   octokitRequestResponseHeaders,
 } from '@tests/mock-data';
 import { octokitMock } from '@tests/mocks';
 
-import type { FindUserPullRequestsPageArgs } from './find-user-pull-requests-page.js';
+import type { GetUserPullRequestsCountArgs } from './get-user-pull-requests-count.js';
 
 vi.mock('@octokit/core');
 
-describe('findUserPullRequestsPage effect', () => {
-  const args: FindUserPullRequestsPageArgs = {
+describe('getUserPullRequestsCount effect', () => {
+  const count = 2000;
+  const args: GetUserPullRequestsCountArgs = {
     username: 'cool',
-    page: 1,
-    state: 'merged',
+    state: 'closed',
   };
 
   beforeEach(() => {
@@ -32,42 +31,43 @@ describe('findUserPullRequestsPage effect', () => {
   it('should fail if github token env variable is not set', async () => {
     vi.unstubAllEnvs();
 
-    const { findUserPullRequestsPage } = await import(
-      './find-user-pull-requests-page.js'
+    const { getUserPullRequestsCount } = await import(
+      './get-user-pull-requests-count.js'
     );
 
-    const task = pipe(findUserPullRequestsPage(args), Effect.flip);
+    const task = pipe(getUserPullRequestsCount(args), Effect.flip);
     const result = await Effect.runPromise(task);
 
     expect(result).toBeInstanceOf(GithubApiError);
     expect((result as Error).message).toBe('GITHUB_TOKEN not set');
   });
 
-  it('should retun data with links', async () => {
+  it('should return count', async () => {
     await octokitMock.requestOnce({
-      data: mockData,
+      data: {
+        total_count: count,
+      },
       ...octokitRequestResponseHeaders(25),
     });
 
-    const { findUserPullRequestsPage } = await import(
-      './find-user-pull-requests-page.js'
+    const { getUserPullRequestsCount } = await import(
+      './get-user-pull-requests-count.js'
     );
 
-    const task = findUserPullRequestsPage(args);
+    const task = getUserPullRequestsCount(args);
     const result = await runPromise(task);
 
-    expect(result.data).toStrictEqual(mockData);
-    expect(result.links).toStrictEqual({ next: 2, last: 25 });
+    expect(result).toStrictEqual(count);
   });
 
   it('should fail with an Octokit request error', async () => {
     await octokitMock.requestFail(new GithubApiError({ cause: 'Oh no' }));
 
-    const { findUserPullRequestsPage } = await import(
-      './find-user-pull-requests-page.js'
+    const { getUserPullRequestsCount } = await import(
+      './get-user-pull-requests-count.js'
     );
 
-    const task = pipe(findUserPullRequestsPage(args), Effect.flip);
+    const task = pipe(getUserPullRequestsCount(args), Effect.flip);
     const result = await Effect.runPromise(pipe(task));
 
     expect(result).toBeInstanceOf(GithubApiError);
@@ -80,11 +80,11 @@ describe('findUserPullRequestsPage effect', () => {
 
     const { warnMock, ConsoleTestLayer } = makeConsoleTestLayer();
 
-    const { findUserPullRequestsPage } = await import(
-      './find-user-pull-requests-page.js'
+    const { getUserPullRequestsCount } = await import(
+      './get-user-pull-requests-count.js'
     );
 
-    const task = pipe(findUserPullRequestsPage(args), ConsoleTestLayer);
+    const task = pipe(getUserPullRequestsCount(args), ConsoleTestLayer);
     const effect = delayEffectAndFlip(task, Duration.seconds(40));
     const result = await Effect.runPromise(effect);
 
@@ -100,22 +100,23 @@ describe('findUserPullRequestsPage effect', () => {
     const retryDelay = 20;
     const error = octokitRequestErrorWithRetryAfter(retryDelay);
     await octokitMock.requestFailAndThenSucceed(error, {
-      data: mockData,
+      data: {
+        total_count: count,
+      },
       ...octokitRequestResponseHeaders(25),
     });
 
     const { warnMock, ConsoleTestLayer } = makeConsoleTestLayer();
 
-    const { findUserPullRequestsPage } = await import(
-      './find-user-pull-requests-page.js'
+    const { getUserPullRequestsCount } = await import(
+      './get-user-pull-requests-count.js'
     );
 
-    const task = pipe(findUserPullRequestsPage(args), ConsoleTestLayer);
+    const task = pipe(getUserPullRequestsCount(args), ConsoleTestLayer);
     const effect = delayEffect(task, Duration.seconds(40));
     const result = await runPromise(effect);
 
     expect(warnMock).toHaveBeenCalledTimes(1);
-    expect(result.data).toStrictEqual(mockData);
-    expect(result.links).toStrictEqual({ next: 2, last: 25 });
+    expect(result).toStrictEqual(count);
   });
 });

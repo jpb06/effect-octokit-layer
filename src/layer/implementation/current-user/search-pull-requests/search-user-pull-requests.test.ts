@@ -9,14 +9,15 @@ import {
 } from '@tests/mock-data';
 import { octokitMock } from '@tests/mocks';
 
-import type { FindUserPullRequestsArgs } from './find-user-pull-requests.js';
+import type { SearchUserPullRequestsArgs } from './search-user-pull-requests.js';
 
 vi.mock('@octokit/core');
 
-describe('findUserPullRequests effect', () => {
-  const args: FindUserPullRequestsArgs = {
+describe('searchUserPullRequests effect', () => {
+  const args: SearchUserPullRequestsArgs = {
     username: 'cool',
     state: 'merged',
+    query: '',
   };
 
   beforeEach(() => {
@@ -24,18 +25,18 @@ describe('findUserPullRequests effect', () => {
     vi.stubEnv('GITHUB_TOKEN', 'GITHUB_TOKEN_VALUE');
   });
 
-  it('should retun multiple pages data', async () => {
+  it('should return multiple pages data', async () => {
     const count = 25;
     const mock = await octokitMock.request({
       data: { ...searchResultmockData, total_count: count },
       ...octokitRequestResponseHeaders(count),
     });
 
-    const { findUserPullRequests } = await import(
-      './find-user-pull-requests.js'
+    const { searchUserPullRequests } = await import(
+      './search-user-pull-requests.js'
     );
 
-    const task = findUserPullRequests(args);
+    const task = searchUserPullRequests(args);
     const result = await Effect.runPromise(task);
 
     expect(result.count).toBe(count);
@@ -49,11 +50,11 @@ describe('findUserPullRequests effect', () => {
       headers: {},
     });
 
-    const { findUserPullRequests } = await import(
-      './find-user-pull-requests.js'
+    const { searchUserPullRequests } = await import(
+      './search-user-pull-requests.js'
     );
 
-    const task = findUserPullRequests(args);
+    const task = searchUserPullRequests(args);
     const result = await Effect.runPromise(task);
 
     expect(result).toStrictEqual({
@@ -72,11 +73,11 @@ describe('findUserPullRequests effect', () => {
       },
     );
 
-    const { findUserPullRequests } = await import(
-      './find-user-pull-requests.js'
+    const { searchUserPullRequests } = await import(
+      './search-user-pull-requests.js'
     );
 
-    const task = pipe(findUserPullRequests(args), Effect.flip);
+    const task = pipe(searchUserPullRequests(args), Effect.flip);
     const result = await Effect.runPromise(task);
 
     expect(result).toBeInstanceOf(GithubApiError);

@@ -7,20 +7,19 @@ import { ApiRateLimitError, GithubApiError } from '@errors';
 import { delayEffect, delayEffectAndFlip } from '@tests/effects';
 import { makeConsoleTestLayer } from '@tests/layers';
 import {
-  mockData,
   octokitRequestErrorWithRetryAfter,
   octokitRequestResponseHeaders,
 } from '@tests/mock-data';
 import { octokitMock } from '@tests/mocks';
 
-import type { FindUserCommitsPageArgs } from './find-user-commits-page.js';
+import type { GetUserCommitsCountArgs } from './get-user-commits-count.js';
 
 vi.mock('@octokit/core');
 
-describe('findUserCommitsPage effect', () => {
-  const args: FindUserCommitsPageArgs = {
+describe('getUserCommitsCount effect', () => {
+  const count = 2000;
+  const args: GetUserCommitsCountArgs = {
     username: 'cool',
-    page: 1,
   };
 
   beforeEach(() => {
@@ -31,36 +30,37 @@ describe('findUserCommitsPage effect', () => {
   it('should fail if github token env variable is not set', async () => {
     vi.unstubAllEnvs();
 
-    const { findUserCommitsPage } = await import('./find-user-commits-page.js');
+    const { getUserCommitsCount } = await import('./get-user-commits-count.js');
 
-    const task = pipe(findUserCommitsPage(args), Effect.flip);
+    const task = pipe(getUserCommitsCount(args), Effect.flip);
     const result = await Effect.runPromise(task);
 
     expect(result).toBeInstanceOf(GithubApiError);
     expect((result as Error).message).toBe('GITHUB_TOKEN not set');
   });
 
-  it('should retun data with links', async () => {
+  it('should return count', async () => {
     await octokitMock.requestOnce({
-      data: mockData,
+      data: {
+        total_count: count,
+      },
       ...octokitRequestResponseHeaders(25),
     });
 
-    const { findUserCommitsPage } = await import('./find-user-commits-page.js');
+    const { getUserCommitsCount } = await import('./get-user-commits-count.js');
 
-    const task = findUserCommitsPage(args);
+    const task = getUserCommitsCount(args);
     const result = await runPromise(task);
 
-    expect(result.data).toStrictEqual(mockData);
-    expect(result.links).toStrictEqual({ next: 2, last: 25 });
+    expect(result).toStrictEqual(count);
   });
 
   it('should fail with an Octokit request error', async () => {
     await octokitMock.requestFail(new GithubApiError({ cause: 'Oh no' }));
 
-    const { findUserCommitsPage } = await import('./find-user-commits-page.js');
+    const { getUserCommitsCount } = await import('./get-user-commits-count.js');
 
-    const task = pipe(findUserCommitsPage(args), Effect.flip);
+    const task = pipe(getUserCommitsCount(args), Effect.flip);
     const result = await Effect.runPromise(pipe(task));
 
     expect(result).toBeInstanceOf(GithubApiError);
@@ -73,9 +73,9 @@ describe('findUserCommitsPage effect', () => {
 
     const { warnMock, ConsoleTestLayer } = makeConsoleTestLayer();
 
-    const { findUserCommitsPage } = await import('./find-user-commits-page.js');
+    const { getUserCommitsCount } = await import('./get-user-commits-count.js');
 
-    const task = pipe(findUserCommitsPage(args), ConsoleTestLayer);
+    const task = pipe(getUserCommitsCount(args), ConsoleTestLayer);
     const effect = delayEffectAndFlip(task, Duration.seconds(40));
     const result = await Effect.runPromise(effect);
 
@@ -91,20 +91,21 @@ describe('findUserCommitsPage effect', () => {
     const retryDelay = 20;
     const error = octokitRequestErrorWithRetryAfter(retryDelay);
     await octokitMock.requestFailAndThenSucceed(error, {
-      data: mockData,
+      data: {
+        total_count: count,
+      },
       ...octokitRequestResponseHeaders(25),
     });
 
     const { warnMock, ConsoleTestLayer } = makeConsoleTestLayer();
 
-    const { findUserCommitsPage } = await import('./find-user-commits-page.js');
+    const { getUserCommitsCount } = await import('./get-user-commits-count.js');
 
-    const task = pipe(findUserCommitsPage(args), ConsoleTestLayer);
+    const task = pipe(getUserCommitsCount(args), ConsoleTestLayer);
     const effect = delayEffect(task, Duration.seconds(40));
     const result = await runPromise(effect);
 
     expect(warnMock).toHaveBeenCalledTimes(1);
-    expect(result.data).toStrictEqual(mockData);
-    expect(result.links).toStrictEqual({ next: 2, last: 25 });
+    expect(result).toStrictEqual(count);
   });
 });
