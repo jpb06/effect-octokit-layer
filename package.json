@@ -59,7 +59,7 @@
     "picocolors": "1.1.1"
   },
   "peerDependencies": {
-    "effect": "3.14.21"
+    "effect": "3.14.22"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
