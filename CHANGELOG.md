@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.10.6](https://github.com/jpb06/effect-octokit-layer/compare/v1.10.5...v1.10.6) (2025-05-12)
+
+
+### Bug Fixes
+
+* bump effect-errors to v1.10.11 ([#105](https://github.com/jpb06/effect-octokit-layer/issues/105)) ([694ae28](https://github.com/jpb06/effect-octokit-layer/commit/694ae289ffd7180f320feefd1c2dd51437c877a9))
+* effect deps leniency ([#103](https://github.com/jpb06/effect-octokit-layer/issues/103)) ([7165304](https://github.com/jpb06/effect-octokit-layer/commit/7165304e9dfe5bfd66162308503925c3b767047b))
+
 ## [1.10.5](https://github.com/jpb06/effect-octokit-layer/compare/v1.10.4...v1.10.5) (2025-05-12)
 
 
