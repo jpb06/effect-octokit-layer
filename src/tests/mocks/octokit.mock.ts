@@ -3,7 +3,7 @@ import type { RequestInterface } from '@octokit/types';
 import { vi } from 'vitest';
 
 export const octokitMock = {
-  requestOnce: async (data: unknown) => {
+  requestOnce: (data: unknown) => {
     const requestMock = vi.fn();
 
     vi.mocked(Octokit).mockImplementationOnce(
@@ -17,7 +17,7 @@ export const octokitMock = {
 
     return requestMock;
   },
-  request: async (data: unknown) => {
+  request: (data: unknown) => {
     const requestMock = vi.fn();
 
     vi.mocked(Octokit).mockImplementation(
@@ -32,7 +32,7 @@ export const octokitMock = {
     return requestMock;
   },
   // biome-ignore lint/suspicious/noExplicitAny: /
-  requestFail: async (error: any) => {
+  requestFail: (error: any) => {
     const requestMock = vi.fn();
 
     vi.mocked(Octokit).mockImplementation(
@@ -47,7 +47,7 @@ export const octokitMock = {
     return requestMock;
   },
   // biome-ignore lint/suspicious/noExplicitAny: /
-  requestSucceedAndFail: async (error: any, data: unknown) => {
+  requestSucceedAndFail: (error: any, data: unknown) => {
     const requestMock = vi.fn();
 
     vi.mocked(Octokit).mockImplementation(
@@ -64,7 +64,7 @@ export const octokitMock = {
     return requestMock;
   },
   // biome-ignore lint/suspicious/noExplicitAny: /
-  requestFailAndThenSucceed: async (error: any, data: unknown) => {
+  requestFailAndThenSucceed: (error: any, data: unknown) => {
     const requestMock = vi.fn();
 
     vi.mocked(Octokit).mockImplementation(
