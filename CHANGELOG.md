@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.0](https://github.com/jpb06/effect-octokit-layer/compare/v1.10.7...v1.11.0) (2025-06-29)
+
+
+### Features
+
+* repo details getter ([#129](https://github.com/jpb06/effect-octokit-layer/issues/129)) ([e08b719](https://github.com/jpb06/effect-octokit-layer/commit/e08b719ceb210c436785a734e991c99f647ddeaa))
+
 ## [1.10.7](https://github.com/jpb06/effect-octokit-layer/compare/v1.10.6...v1.10.7) (2025-05-23)
 
 
