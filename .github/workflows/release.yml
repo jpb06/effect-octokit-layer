@@ -2,7 +2,7 @@ name: ⚡ Release
 
 on:
   workflow_run:
-    workflows: ['⚡ Integration checks']
+    workflows: ["⚡ Code quality"]
     branches: [main]
     types:
       - completed
@@ -40,8 +40,8 @@ jobs:
         uses: actions/setup-node@v4
         if: ${{ steps.release.outputs.release_created }}
         with:
-          node-version-file: '.node-version'
-          registry-url: 'https://registry.npmjs.org'
+          node-version-file: ".node-version"
+          registry-url: "https://registry.npmjs.org"
 
       - name: 📥 Install deps
         if: ${{ steps.release.outputs.release_created }}

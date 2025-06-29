@@ -1,4 +1,4 @@
-name: ⚡ Integration checks
+name: ⚡ Code quality
 
 on:
   push:
@@ -28,7 +28,7 @@ jobs:
       - name: ⎔ Setup node
         uses: actions/setup-node@v4
         with:
-          node-version-file: '.node-version'
+          node-version-file: ".node-version"
           cache-dependency-path: ./package.json
 
       - name: 📥 Install deps
@@ -53,7 +53,7 @@ jobs:
       - name: ⎔ Setup node
         uses: actions/setup-node@v4
         with:
-          node-version-file: '.node-version'
+          node-version-file: ".node-version"
           cache-dependency-path: ./package.json
 
       - name: 📥 Install deps
@@ -75,7 +75,7 @@ jobs:
       - name: ⎔ Setup node
         uses: actions/setup-node@v4
         with:
-          node-version-file: '.node-version'
+          node-version-file: ".node-version"
           cache-dependency-path: ./package.json
 
       - name: 📥 Install deps
