@@ -1,5 +1,4 @@
-import { Schema } from 'effect';
-import { Effect, pipe } from 'effect';
+import { Effect, pipe, Schema } from 'effect';
 
 import { GithubApiError } from './index.js';
 import { OctokitApiRateLimitErrorSchema } from './octokit-api-rate-limit-error.schema.js';

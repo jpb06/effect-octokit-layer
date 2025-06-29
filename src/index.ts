@@ -28,13 +28,13 @@ import type {
   UserProfileResult,
   UserPullRequestsCountResult,
   UserPullRequestsSearchResult,
-  UserReposType,
   UserRepositoriesResult,
+  UserReposType,
 } from '@implementation';
 import type { RepoArgs } from '@implementation/types';
 
-import { OctokitLayerLive } from './layer/octokit.layer-live.js';
 import { OctokitLayer } from './layer/octokit.layer.js';
+import { OctokitLayerLive } from './layer/octokit.layer-live.js';
 
 export { OctokitLayer, OctokitLayerLive };
 export type { RepoArgs };
@@ -72,9 +72,8 @@ export type {
   UserPullRequestsCountResult,
 };
 
-export * from './types/effect.types.js';
-export * from './layer/errors/github-api.error.js';
 export * from './layer/errors/api-rate-limit.error.js';
-
-export type { LayerErrors, Octokit } from './layer/octokit.context.js';
+export * from './layer/errors/github-api.error.js';
 export { OctokitApiRateLimitErrorSchema } from './layer/errors/octokit-api-rate-limit-error.schema.js';
+export type { LayerErrors, Octokit } from './layer/octokit.context.js';
+export * from './types/effect.types.js';

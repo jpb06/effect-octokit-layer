@@ -1,4 +1,4 @@
-import { Schema, pipe } from 'effect';
+import { pipe, Schema } from 'effect';
 
 export const OctokitApiRateLimitErrorSchema = Schema.Struct({
   name: Schema.String,
