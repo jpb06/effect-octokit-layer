@@ -13,6 +13,7 @@ import {
   getPullRequestReviewComments,
   getPullRequestReviews,
   getRepoDetails,
+  getRepoFile,
   getRepoIssues,
   getRepoLanguages,
   getRepoPullRequests,
@@ -64,5 +65,6 @@ export const OctokitLayerLive = Layer.succeed(
     deletePullRequestReview,
     deletePullRequestComment,
     getRepoDetails,
+    getRepoFile,
   }),
 );

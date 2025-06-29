@@ -1,4 +1,5 @@
 export * from './details/get-repo-details.js';
+export * from './files/get-repo-file.js';
 export * from './issues/comments/get-all/get-issue-comments.js';
 export * from './issues/get-all/get-repo-issues.js';
 export * from './issues/get-one/get-issue.js';

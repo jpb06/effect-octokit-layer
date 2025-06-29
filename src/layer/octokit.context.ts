@@ -14,6 +14,8 @@ import type {
   GetPullRequestCommentsArgs,
   GetPullRequestReviewCommentsArgs,
   GetPullRequestReviewsArgs,
+  GetRepoFileArgs,
+  GetRepoFileResult,
   GetRepoIssuesArgs,
   GetRepoLanguagesArgs,
   GetRepoPullRequestsArgs,
@@ -149,6 +151,9 @@ export interface Octokit {
   readonly deletePullRequestComment: (
     args: PullRequestCommentDeletionArgs,
   ) => Effect.Effect<DeletePullRequestCommentResult, LayerErrors, never>;
+  readonly getRepoFile: (
+    args: GetRepoFileArgs,
+  ) => Effect.Effect<GetRepoFileResult, LayerErrors, never>;
 }
 
 export const OctokitLayerContext = Context.GenericTag<Octokit>('Octokit');
