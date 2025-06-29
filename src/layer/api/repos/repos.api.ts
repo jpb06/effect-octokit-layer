@@ -2,6 +2,7 @@ import type { Effect } from 'effect';
 
 import { defaultConcurrency } from '@constants';
 import type {
+  GetRepoFileResult,
   RepoDetailsResult,
   RepoLanguagesResult,
   RepoReleasesResult,
@@ -25,6 +26,17 @@ export const reposApi = (args: RepoArgs) => ({
    */
   details: (): Effect.Effect<RepoDetailsResult, LayerErrors, Octokit> =>
     tapLayer(Context, ({ getRepoDetails }) => getRepoDetails(args)),
+  /**
+   * Github documentation:
+   * https://docs.github.com/en/rest/repos/contents?apiVersion=2022-11-28#get-repository-content
+   */
+  getFile: (getFileArgs: {
+    path: string;
+    ref?: string;
+  }): Effect.Effect<GetRepoFileResult, LayerErrors, Octokit> =>
+    tapLayer(Context, ({ getRepoFile }) =>
+      getRepoFile({ ...args, ...getFileArgs }),
+    ),
   /**
    * Github documentation:
    * https://docs.github.com/en/rest/repos/repos?apiVersion=2022-11-28#list-repository-tags
