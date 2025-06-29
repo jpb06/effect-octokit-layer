@@ -1,7 +1,8 @@
+import { Match } from 'effect';
+
 import { getOnePage } from '@implementation/generic';
 import type { EffectResultSuccess } from '@types';
 
-import { Match } from 'effect';
 import type { PullRequestState } from './pull-request-state.type.js';
 
 export interface SearchUserPullRequestsPageArgs {

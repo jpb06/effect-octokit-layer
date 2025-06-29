@@ -12,8 +12,8 @@ import type {
   UserProfileResult,
   UserPullRequestsCountResult,
   UserPullRequestsSearchResult,
-  UserReposType,
   UserRepositoriesResult,
+  UserReposType,
 } from '@implementation';
 
 import {

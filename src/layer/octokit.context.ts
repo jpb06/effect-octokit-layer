@@ -36,6 +36,8 @@ import type {
   PullRequestReviewCreationArgs,
   PullRequestReviewDeletionArgs,
   PullRequestReviewsResult,
+  RepoArgs,
+  RepoDetailsResult,
   RepoIssuesResult,
   RepoLanguagesResult,
   RepoPullRequestsCommentsResult,
@@ -96,6 +98,9 @@ export interface Octokit {
   readonly getUserRepositories: (
     args: GetUserRepositoriesArgs,
   ) => Effect.Effect<UserRepositoriesResult, LayerErrors, never>;
+  readonly getRepoDetails: (
+    args: RepoArgs,
+  ) => Effect.Effect<RepoDetailsResult, LayerErrors, never>;
   readonly getRepoTags: (
     args: GetRepoTagsArgs,
   ) => Effect.Effect<RepoTagsResult, LayerErrors, never>;

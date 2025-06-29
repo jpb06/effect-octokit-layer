@@ -2,6 +2,7 @@ import type { Effect } from 'effect';
 
 import { defaultConcurrency } from '@constants';
 import type {
+  RepoDetailsResult,
   RepoLanguagesResult,
   RepoReleasesResult,
   RepoTagsResult,
@@ -18,6 +19,12 @@ import { repoIssuesApi } from './issues/issues.api.js';
 import { repoPullRequestsApi } from './pull-requests/pull-requests.api.js';
 
 export const reposApi = (args: RepoArgs) => ({
+  /**
+   * Github documentation:
+   * https://docs.github.com/en/rest/repos/repos?apiVersion=2022-11-28#get-a-repository
+   */
+  details: (): Effect.Effect<RepoDetailsResult, LayerErrors, Octokit> =>
+    tapLayer(Context, ({ getRepoDetails }) => getRepoDetails(args)),
   /**
    * Github documentation:
    * https://docs.github.com/en/rest/repos/repos?apiVersion=2022-11-28#list-repository-tags

@@ -2,9 +2,9 @@ import {
   type Duration,
   Effect,
   Fiber,
+  pipe,
   TestClock,
   TestContext,
-  pipe,
 } from 'effect';
 
 export const delayEffect = <R, E>(

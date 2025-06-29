@@ -1,4 +1,4 @@
-import { Duration, Effect, Schedule, pipe } from 'effect';
+import { Duration, Effect, pipe, Schedule } from 'effect';
 
 import { isApiRateLimitError } from '@errors';
 
