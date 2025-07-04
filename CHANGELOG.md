@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.12.0](https://github.com/jpb06/effect-octokit-layer/compare/v1.11.0...v1.12.0) (2025-07-04)
+
+
+### Features
+
+* get file content getter ([#131](https://github.com/jpb06/effect-octokit-layer/issues/131)) ([5b4b7b3](https://github.com/jpb06/effect-octokit-layer/commit/5b4b7b3e6f1584e2a2cb6f88d94ec18d0d0a676e))
+
 ## [1.11.0](https://github.com/jpb06/effect-octokit-layer/compare/v1.10.7...v1.11.0) (2025-06-29)
 
 
