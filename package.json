@@ -70,7 +70,7 @@
     "del-cli": "6.0.0",
     "effect-errors": "1.10.13",
     "npm-check-updates": "18.0.1",
-    "readme-package-icons": "1.2.1",
+    "readme-package-icons": "1.2.2",
     "ts-paths-resolver": "1.2.67",
     "typescript": "5.8.3",
     "vite-tsconfig-paths": "5.1.4",
