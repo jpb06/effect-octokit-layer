@@ -6,6 +6,7 @@ export * from './issues/get-one/get-issue.js';
 export * from './languages/get-repo-languages.js';
 export * from './pull-requests/all/comments/get-all/get-repo-pulls-requests-comments.js';
 export * from './pull-requests/all/get/get-repo-pull-requests.js';
+export * from './pull-requests/all/get/get-repo-pull-requests-state.type.js';
 export * from './pull-requests/one/comments/create/create-pull-request-comment.js';
 export * from './pull-requests/one/comments/delete/delete-pull-request-comment.js';
 export * from './pull-requests/one/comments/get-all/get-pull-request-comments.js';

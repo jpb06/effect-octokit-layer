@@ -5,9 +5,11 @@ import type { RepoArgs } from '@implementation/types';
 import type { EffectResultSuccess } from '@types';
 
 import { getRepoPullRequestsPage } from './get-repo-pull-requests-page.js';
+import type { GetRepoPullRequestState } from './get-repo-pull-requests-state.type.js';
 
 export interface GetRepoPullRequestsArgs extends RepoArgs {
   concurrency?: number;
+  state?: GetRepoPullRequestState;
 }
 
 const getPage = (args: GetRepoPullRequestsArgs) => (page: number) =>

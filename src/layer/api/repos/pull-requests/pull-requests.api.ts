@@ -2,6 +2,7 @@ import type { Effect } from 'effect';
 
 import { defaultConcurrency } from '@constants';
 import type {
+  GetRepoPullRequestState,
   PullRequestCommentsResult,
   PullRequestResult,
   RepoPullRequestsResult,
@@ -23,10 +24,11 @@ export const repoPullRequestsApi = ({ owner, repo }: RepoArgs) => ({
      * https://docs.github.com/en/rest/pulls/pulls#list-pull-requests
      */
     getAll: (
+      state: GetRepoPullRequestState = 'all',
       concurrency = defaultConcurrency,
     ): Effect.Effect<RepoPullRequestsResult, LayerErrors, Octokit> =>
       tapLayer(Context, ({ getRepoPullRequests }) =>
-        getRepoPullRequests({ owner, repo, concurrency }),
+        getRepoPullRequests({ owner, repo, state, concurrency }),
       ),
     /**
      * Github documentation:
