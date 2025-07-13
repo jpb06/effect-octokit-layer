@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.13.0](https://github.com/jpb06/effect-octokit-layer/compare/v1.12.1...v1.13.0) (2025-07-13)
+
+
+### Features
+
+* add state param to repo pull requests getter ([#143](https://github.com/jpb06/effect-octokit-layer/issues/143)) ([a16804b](https://github.com/jpb06/effect-octokit-layer/commit/a16804bca43e529ce967455d53725e97965751e1))
+
+
+### Bug Fixes
+
+* **deps:** update dependency @octokit/core to v7.0.3 ([#141](https://github.com/jpb06/effect-octokit-layer/issues/141)) ([c6f3d29](https://github.com/jpb06/effect-octokit-layer/commit/c6f3d29d6e819f6b209e76252d97efad8830a5c0))
+
 ## [1.12.1](https://github.com/jpb06/effect-octokit-layer/compare/v1.12.0...v1.12.1) (2025-07-05)
 
 
