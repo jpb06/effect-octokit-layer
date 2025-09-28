@@ -47,7 +47,7 @@ describe('getIssueCommentsPage effect', () => {
   });
 
   it('should fail with an Octokit request error', async () => {
-    await octokitMock.requestFail(new Error('Oh no'));
+    octokitMock.requestFail(new Error('Oh no'));
 
     const { getIssueCommentsPage } = await import(
       './get-issue-comments-page.js'
@@ -62,7 +62,7 @@ describe('getIssueCommentsPage effect', () => {
   it('should fail if an api rate limit error', async () => {
     const retryDelay = 20;
     const error = octokitRequestErrorWithRetryAfter(retryDelay);
-    await octokitMock.requestFail(error);
+    octokitMock.requestFail(error);
     const { warnMock, ConsoleTestLayer } = makeConsoleTestLayer();
 
     const { getIssueCommentsPage } = await import(
@@ -84,7 +84,7 @@ describe('getIssueCommentsPage effect', () => {
   it('should retry one time and then succeed', async () => {
     const retryDelay = 20;
     const error = octokitRequestErrorWithRetryAfter(retryDelay);
-    await octokitMock.requestFailAndThenSucceed(error, {
+    octokitMock.requestFailAndThenSucceed(error, {
       data: mockData,
       ...octokitRequestResponseHeaders(25),
     });

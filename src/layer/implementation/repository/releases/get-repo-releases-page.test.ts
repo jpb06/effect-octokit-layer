@@ -57,7 +57,7 @@ describe('getRepoReleasesPage effect', () => {
   });
 
   it('should fail with an Octokit request error', async () => {
-    await octokitMock.requestFail(new GithubApiError({ cause: 'Oh no' }));
+    octokitMock.requestFail(new GithubApiError({ cause: 'Oh no' }));
 
     const { getRepoReleasesPage } = await import('./get-repo-releases-page.js');
 
@@ -70,7 +70,7 @@ describe('getRepoReleasesPage effect', () => {
   it('should fail with an api rate limit error', async () => {
     const retryDelay = 20;
     const error = octokitRequestErrorWithRetryAfter(retryDelay);
-    await octokitMock.requestFail(error);
+    octokitMock.requestFail(error);
 
     const { warnMock, ConsoleTestLayer } = makeConsoleTestLayer();
 
@@ -91,7 +91,7 @@ describe('getRepoReleasesPage effect', () => {
   it('should retry one time and then succeed', async () => {
     const retryDelay = 20;
     const error = octokitRequestErrorWithRetryAfter(retryDelay);
-    await octokitMock.requestFailAndThenSucceed(error, {
+    octokitMock.requestFailAndThenSucceed(error, {
       data: mockData,
       ...octokitRequestResponseHeaders(25),
     });
