@@ -49,7 +49,7 @@ describe('getUserProfile effect', () => {
   it('should fail if an api rate limit error', async () => {
     const retryDelay = 20;
     const error = octokitRequestErrorWithRetryAfter(retryDelay);
-    await octokitMock.requestFail(error);
+    octokitMock.requestFail(error);
 
     const { warnMock, ConsoleTestLayer } = makeConsoleTestLayer();
 
@@ -70,7 +70,7 @@ describe('getUserProfile effect', () => {
   it('should retry one time and then succeed', async () => {
     const retryDelay = 20;
     const error = octokitRequestErrorWithRetryAfter(retryDelay);
-    await octokitMock.requestFailAndThenSucceed(error, {
+    octokitMock.requestFailAndThenSucceed(error, {
       data: mockData,
       ...octokitRequestResponseHeaders(25),
     });
