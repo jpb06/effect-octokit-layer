@@ -1,10 +1,9 @@
-import type { SortDirection } from '../../../types/common.types.js';
+import type { IssueState, SortDirection } from '../../../types/common.types.js';
 
-export type GetRepoIssuesState = 'all' | 'open' | 'closed';
 export type GetRepoIssuesSorting = 'updated' | 'created' | 'comments';
 
 export type GetRepoIssuesArgs = {
-  state: GetRepoIssuesState;
+  state: IssueState;
   assignee?: string;
   creator?: string;
   mentioned?: string;

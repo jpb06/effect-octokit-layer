@@ -1,4 +1,7 @@
-import type { SortDirection } from '../../../../types/common.types.js';
+import type {
+  IssueState,
+  SortDirection,
+} from '../../../../types/common.types.js';
 
 export type GetRepoPullRequestState = 'open' | 'closed' | 'all';
 
@@ -9,7 +12,7 @@ export type GetRepoPullRequestsSorting =
   | 'long-running';
 
 export type GetRepoPullRequestsArgs = {
-  state: GetRepoPullRequestState;
+  state: IssueState;
   head?: string;
   direction?: SortDirection;
   sort?: GetRepoPullRequestsSorting;
