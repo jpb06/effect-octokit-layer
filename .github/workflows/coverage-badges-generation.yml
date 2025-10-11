@@ -37,7 +37,7 @@ jobs:
         run: bun run test-ci
 
       - name: 🥁 Generating coverage badges
-        uses: jpb06/coverage-badges-action@46dc5e72864961c6f42aa54b32431931039cede5 # v1.4.2
+        uses: jpb06/coverage-badges-action@11788d0fa0ef5076ed749ed5c1c8394d504a9fdd # v1.4.4
         with:
           badges-icon: vitest
           badges-labels-prefix: "Vitest coverage"
