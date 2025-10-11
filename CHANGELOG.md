@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.14.0](https://github.com/jpb06/effect-octokit-layer/compare/v1.13.2...v1.14.0) (2025-10-11)
+
+
+### Features
+
+* extending repo issues / pull requests args ([#180](https://github.com/jpb06/effect-octokit-layer/issues/180)) ([da2fbf9](https://github.com/jpb06/effect-octokit-layer/commit/da2fbf93eabfa81e2f2752b44efa11a474ba8c38))
+
+
+### Bug Fixes
+
+* factorizing issue state type ([#183](https://github.com/jpb06/effect-octokit-layer/issues/183)) ([e0ce8b5](https://github.com/jpb06/effect-octokit-layer/commit/e0ce8b53fca099243f05d990a26835c658d748ce))
+
 ## [1.13.2](https://github.com/jpb06/effect-octokit-layer/compare/v1.13.1...v1.13.2) (2025-10-08)
 
 
