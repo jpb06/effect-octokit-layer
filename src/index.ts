@@ -3,7 +3,12 @@ import type {
   CreatePullRequestReviewResult,
   DeletePullRequestCommentResult,
   DeletePullRequestReviewResult,
+  GetRepoIssuesArgs,
+  GetRepoIssuesSorting,
+  GetRepoIssuesState,
   GetRepoPullRequestState,
+  GetRepoPullRequestsArgs,
+  GetRepoPullRequestsSorting,
   IssueCommentsResult,
   IssueResult,
   OrgRepositoriesResult,
@@ -32,7 +37,7 @@ import type {
   UserRepositoriesResult,
   UserReposType,
 } from '@implementation';
-import type { RepoArgs } from '@implementation/types';
+import type { RepoArgs, SortDirection } from '@implementation/types';
 
 import { OctokitLayer } from './layer/octokit.layer.js';
 import { OctokitLayerLive } from './layer/octokit.layer-live.js';
@@ -60,7 +65,12 @@ export type {
   UserOrgsResult,
   UserProfileResult,
   PullRequestState,
+  GetRepoIssuesArgs,
+  GetRepoIssuesState,
+  GetRepoIssuesSorting,
   GetRepoPullRequestState,
+  GetRepoPullRequestsArgs,
+  GetRepoPullRequestsSorting,
   UserReposType,
   RepoTagsResult,
   UserCommitsSearchResult,
@@ -72,6 +82,7 @@ export type {
   UserCommitsCountResult,
   RepoPullRequestsCommentsResult,
   UserPullRequestsCountResult,
+  SortDirection,
 };
 
 export * from './layer/errors/api-rate-limit.error.js';

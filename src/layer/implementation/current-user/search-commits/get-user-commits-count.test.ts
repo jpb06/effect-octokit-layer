@@ -40,7 +40,7 @@ describe('getUserCommitsCount effect', () => {
   });
 
   it('should return count', async () => {
-    await octokitMock.requestOnce({
+    octokitMock.requestOnce({
       data: {
         total_count: count,
       },

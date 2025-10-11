@@ -26,7 +26,7 @@ describe('searchUserIssues effect', () => {
 
   it('should return multiple pages data', async () => {
     const count = 25;
-    const mock = await octokitMock.request({
+    const mock = octokitMock.request({
       data: { ...searchResultmockData, total_count: count },
       ...octokitRequestResponseHeaders(count),
     });
@@ -42,7 +42,7 @@ describe('searchUserIssues effect', () => {
   });
 
   it('should only do one request', async () => {
-    const mock = await octokitMock.request({
+    const mock = octokitMock.request({
       data: searchResultmockData,
       headers: {},
     });
@@ -60,13 +60,10 @@ describe('searchUserIssues effect', () => {
   });
 
   it('should fail when one request fails', async () => {
-    await octokitMock.requestSucceedAndFail(
-      new GithubApiError({ cause: 'oh no' }),
-      {
-        data: mockData,
-        ...octokitRequestResponseHeaders(3),
-      },
-    );
+    octokitMock.requestSucceedAndFail(new GithubApiError({ cause: 'oh no' }), {
+      data: mockData,
+      ...octokitRequestResponseHeaders(3),
+    });
 
     const { searchUserIssues } = await import('./search-user-issues.js');
 

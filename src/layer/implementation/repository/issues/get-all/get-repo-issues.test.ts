@@ -5,12 +5,12 @@ import { GithubApiError } from '@errors';
 import { mockData, octokitRequestResponseHeaders } from '@tests/mock-data';
 import { octokitMock } from '@tests/mocks';
 
-import type { GetRepoIssuesArgs } from './get-repo-issues.js';
+import type { GetRepoIssuesAggregatorArgs } from './get-repo-issues.js';
 
 vi.mock('@octokit/core');
 
 describe('getRepoIssues effect', () => {
-  const args: GetRepoIssuesArgs = {
+  const args: GetRepoIssuesAggregatorArgs = {
     owner: 'cool',
     repo: 'yolo',
     state: 'all',
@@ -23,7 +23,7 @@ describe('getRepoIssues effect', () => {
 
   it('should return multiple pages data', async () => {
     const count = 25;
-    const mock = await octokitMock.request({
+    const mock = octokitMock.request({
       data: mockData,
       ...octokitRequestResponseHeaders(count),
     });
@@ -38,7 +38,7 @@ describe('getRepoIssues effect', () => {
   });
 
   it('should only do one request', async () => {
-    const mock = await octokitMock.request({
+    const mock = octokitMock.request({
       data: mockData,
       headers: {},
     });
@@ -53,13 +53,10 @@ describe('getRepoIssues effect', () => {
   });
 
   it('should fail when one request fails', async () => {
-    await octokitMock.requestSucceedAndFail(
-      new GithubApiError({ cause: 'oh no' }),
-      {
-        data: mockData,
-        ...octokitRequestResponseHeaders(3),
-      },
-    );
+    octokitMock.requestSucceedAndFail(new GithubApiError({ cause: 'oh no' }), {
+      data: mockData,
+      ...octokitRequestResponseHeaders(3),
+    });
 
     const { getRepoIssues } = await import('./get-repo-issues.js');
 

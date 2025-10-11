@@ -27,7 +27,7 @@ describe('searchUserPullRequests effect', () => {
 
   it('should return multiple pages data', async () => {
     const count = 25;
-    const mock = await octokitMock.request({
+    const mock = octokitMock.request({
       data: { ...searchResultmockData, total_count: count },
       ...octokitRequestResponseHeaders(count),
     });
@@ -45,7 +45,7 @@ describe('searchUserPullRequests effect', () => {
   });
 
   it('should only do one request', async () => {
-    const mock = await octokitMock.request({
+    const mock = octokitMock.request({
       data: searchResultmockData,
       headers: {},
     });
@@ -65,13 +65,10 @@ describe('searchUserPullRequests effect', () => {
   });
 
   it('should fail when one request fails', async () => {
-    await octokitMock.requestSucceedAndFail(
-      new GithubApiError({ cause: 'oh no' }),
-      {
-        data: mockData,
-        ...octokitRequestResponseHeaders(3),
-      },
-    );
+    octokitMock.requestSucceedAndFail(new GithubApiError({ cause: 'oh no' }), {
+      data: mockData,
+      ...octokitRequestResponseHeaders(3),
+    });
 
     const { searchUserPullRequests } = await import(
       './search-user-pull-requests.js'

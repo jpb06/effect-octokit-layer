@@ -152,14 +152,23 @@ const [
         octokitRepo.releases(),
         // Get tags
         octokitRepo.tags(),
-        // Get all issues
-        octokitRepo.issues('all'),
+        // Get all issues which are not pull requests and were created by user 'mcmullinboy15'
+        octokitRepo.issues({
+          state: 'all',
+          excludePulls: true,
+          creator: 'mcmullinboy15',
+        }),
         // Get issue #34
         octokitRepo.issue(34).details(),
         // Get issue #34 comments
         octokitRepo.issue(34).comments(),
-        // Get all pull requests
-        octokitRepo.pulls.getAll(),
+        // Get all pull requests matching head filter 'user:branch-name'
+        octokitRepo.pulls.getAll({
+          state: 'all',
+          sort: 'created',
+          direction: 'desc',
+          head: 'jpb06:renovate/readme-package-icons-1.x',
+        }),
         // Get all pull requests comments in repo
         octokitRepo.pulls.comments(),
       ],

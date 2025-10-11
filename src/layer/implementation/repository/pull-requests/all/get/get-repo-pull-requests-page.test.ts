@@ -21,6 +21,7 @@ describe('getRepoPullRequestsPage effect', () => {
     owner: 'cool',
     repo: 'cool',
     page: 1,
+    state: 'all',
   };
 
   beforeEach(() => {
@@ -29,7 +30,7 @@ describe('getRepoPullRequestsPage effect', () => {
   });
 
   it('should return data with links', async () => {
-    await octokitMock.requestOnce({
+    octokitMock.requestOnce({
       data: mockData,
       ...octokitRequestResponseHeaders(25),
     });

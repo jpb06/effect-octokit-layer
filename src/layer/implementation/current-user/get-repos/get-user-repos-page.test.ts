@@ -29,7 +29,7 @@ describe('getUserReposPage effect', () => {
   });
 
   it('should return data with links', async () => {
-    await octokitMock.requestOnce({
+    octokitMock.requestOnce({
       data: mockData,
       ...octokitRequestResponseHeaders(25),
     });

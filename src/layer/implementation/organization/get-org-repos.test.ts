@@ -21,7 +21,7 @@ describe('getOrgRepositories effect', () => {
 
   it('should return user repos', async () => {
     const count = 25;
-    const mock = await octokitMock.request({
+    const mock = octokitMock.request({
       data: mockData,
       ...octokitRequestResponseHeaders(count),
     });
@@ -37,7 +37,7 @@ describe('getOrgRepositories effect', () => {
 
   it('should return org repos', async () => {
     const count = 25;
-    const mock = await octokitMock.request({
+    const mock = octokitMock.request({
       data: mockData,
       ...octokitRequestResponseHeaders(count),
     });
@@ -52,7 +52,7 @@ describe('getOrgRepositories effect', () => {
   });
 
   it('should only do one request', async () => {
-    const mock = await octokitMock.request({
+    const mock = octokitMock.request({
       data: mockData,
       headers: {},
     });
@@ -67,13 +67,10 @@ describe('getOrgRepositories effect', () => {
   });
 
   it('should fail when one request fails', async () => {
-    await octokitMock.requestSucceedAndFail(
-      new GithubApiError({ cause: 'oh no' }),
-      {
-        data: mockData,
-        ...octokitRequestResponseHeaders(3),
-      },
-    );
+    octokitMock.requestSucceedAndFail(new GithubApiError({ cause: 'oh no' }), {
+      data: mockData,
+      ...octokitRequestResponseHeaders(3),
+    });
 
     const { getOrgRepositories } = await import('./get-org-repos.js');
 

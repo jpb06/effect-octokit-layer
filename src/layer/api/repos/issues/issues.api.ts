@@ -2,7 +2,7 @@ import type { Effect } from 'effect';
 
 import { defaultConcurrency } from '@constants';
 import type {
-  GetIssuesState,
+  GetRepoIssuesArgs,
   IssueCommentsResult,
   IssueResult,
   RepoIssuesResult,
@@ -22,11 +22,11 @@ export const repoIssuesApi = ({ owner, repo }: RepoArgs) => ({
    * https://docs.github.com/en/rest/issues/issues?apiVersion=2022-11-28#list-repository-issues
    */
   issues: (
-    state: GetIssuesState,
+    args: GetRepoIssuesArgs,
     concurrency = defaultConcurrency,
   ): Effect.Effect<RepoIssuesResult, LayerErrors, Octokit> =>
     tapLayer(Context, ({ getRepoIssues }) =>
-      getRepoIssues({ owner, repo, concurrency, state }),
+      getRepoIssues({ ...args, owner, repo, concurrency }),
     ),
   issue: (number: number) => ({
     /**
