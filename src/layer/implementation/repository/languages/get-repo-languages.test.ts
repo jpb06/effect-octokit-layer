@@ -21,7 +21,7 @@ describe('getRepoLanguages effect', () => {
   });
 
   it('should return data', async () => {
-    const mock = await octokitMock.request({
+    const mock = octokitMock.request({
       data: mockData,
       headers: {},
     });

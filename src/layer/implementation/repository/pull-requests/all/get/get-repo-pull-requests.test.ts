@@ -5,14 +5,15 @@ import { GithubApiError } from '@errors';
 import { mockData, octokitRequestResponseHeaders } from '@tests/mock-data';
 import { octokitMock } from '@tests/mocks';
 
-import type { GetRepoPullRequestsArgs } from './get-repo-pull-requests.js';
+import type { GetRepoPullRequestsAggregatorArgs } from './get-repo-pull-requests.js';
 
 vi.mock('@octokit/core');
 
 describe('getRepoPullRequests effect', () => {
-  const args: GetRepoPullRequestsArgs = {
+  const args: GetRepoPullRequestsAggregatorArgs = {
     owner: 'cool',
     repo: 'yolo',
+    state: 'all',
   };
 
   beforeEach(() => {
@@ -22,7 +23,7 @@ describe('getRepoPullRequests effect', () => {
 
   it('should return multiple pages data', async () => {
     const count = 25;
-    const mock = await octokitMock.request({
+    const mock = octokitMock.request({
       data: mockData,
       ...octokitRequestResponseHeaders(count),
     });
@@ -37,7 +38,7 @@ describe('getRepoPullRequests effect', () => {
   });
 
   it('should only do one request', async () => {
-    const mock = await octokitMock.request({
+    const mock = octokitMock.request({
       data: mockData,
       headers: {},
     });
@@ -52,13 +53,10 @@ describe('getRepoPullRequests effect', () => {
   });
 
   it('should fail when one request fails', async () => {
-    await octokitMock.requestSucceedAndFail(
-      new GithubApiError({ cause: 'oh no' }),
-      {
-        data: mockData,
-        ...octokitRequestResponseHeaders(3),
-      },
-    );
+    octokitMock.requestSucceedAndFail(new GithubApiError({ cause: 'oh no' }), {
+      data: mockData,
+      ...octokitRequestResponseHeaders(3),
+    });
 
     const { getRepoPullRequests } = await import('./get-repo-pull-requests.js');
 

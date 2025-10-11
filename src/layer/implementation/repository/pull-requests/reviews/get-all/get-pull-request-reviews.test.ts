@@ -23,7 +23,7 @@ describe('getPullRequestReviews effect', () => {
 
   it('should return multiple pages data', async () => {
     const count = 25;
-    const mock = await octokitMock.request({
+    const mock = octokitMock.request({
       data: mockData,
       ...octokitRequestResponseHeaders(count),
     });
@@ -40,7 +40,7 @@ describe('getPullRequestReviews effect', () => {
   });
 
   it('should only do one request', async () => {
-    const mock = await octokitMock.request({
+    const mock = octokitMock.request({
       data: mockData,
       headers: {},
     });
@@ -57,13 +57,10 @@ describe('getPullRequestReviews effect', () => {
   });
 
   it('should fail when one request fails', async () => {
-    await octokitMock.requestSucceedAndFail(
-      new GithubApiError({ cause: 'oh no' }),
-      {
-        data: mockData,
-        ...octokitRequestResponseHeaders(3),
-      },
-    );
+    octokitMock.requestSucceedAndFail(new GithubApiError({ cause: 'oh no' }), {
+      data: mockData,
+      ...octokitRequestResponseHeaders(3),
+    });
 
     const { getPullRequestReviews } = await import(
       './get-pull-request-reviews.js'

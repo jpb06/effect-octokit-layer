@@ -2,11 +2,10 @@ import { getOnePage } from '@implementation/generic';
 import type { RepoArgs } from '@implementation/types';
 import type { EffectResultSuccess } from '@types';
 
-import type { GetIssuesState } from './get-issues.types.js';
+import type { GetRepoIssuesArgs } from './get-repo-issues.types.js';
 
-export interface GetRepoIssuesPageArgs extends RepoArgs {
+export interface GetRepoIssuesPageArgs extends RepoArgs, GetRepoIssuesArgs {
   page: number;
-  state: GetIssuesState;
 }
 
 export const getRepoIssuesPage = (args: GetRepoIssuesPageArgs) =>
