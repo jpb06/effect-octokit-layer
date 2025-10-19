@@ -2,10 +2,12 @@ import { Effect, pipe } from 'effect';
 
 import type { EffectResultSuccess } from '@types';
 
+import type { UserIssuesType } from './search-user-issues.type.js';
 import { searchUserIssuesPage } from './search-user-issues-page.js';
 
 export interface GetUserIssuesCountArgs {
   username: string;
+  type: UserIssuesType;
 }
 
 export const getUserIssuesCount = ({ ...args }: GetUserIssuesCountArgs) =>

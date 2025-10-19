@@ -8,6 +8,7 @@ import type {
   UserEventsResult,
   UserIssuesCountResult,
   UserIssuesSearchResult,
+  UserIssuesType,
   UserOrgsResult,
   UserProfileResult,
   UserPullRequestsCountResult,
@@ -36,25 +37,30 @@ export const usersApi = (username: string) => ({
    */
   orgs: (): Effect.Effect<UserOrgsResult, LayerErrors, Octokit> =>
     tapLayer(Context, ({ getUserOrgs }) => getUserOrgs(username)),
-  getIssuesCount: (): Effect.Effect<
-    UserIssuesCountResult,
-    LayerErrors,
-    Octokit
-  > =>
+  getIssuesCount: (
+    type: UserIssuesType,
+  ): Effect.Effect<UserIssuesCountResult, LayerErrors, Octokit> =>
     tapLayer(Context, ({ getUserIssuesCount }) =>
-      getUserIssuesCount({ username }),
+      getUserIssuesCount({ username, type }),
     ),
   /**
    * Github documentation:
    * https://docs.github.com/en/rest/search/search?apiVersion=2022-11-28#search-issues-and-pull-requests
    */
   searchIssues: (
+    type: UserIssuesType,
     query: string,
     fetchOnlyFirstPage = false,
     concurrency = defaultConcurrency,
   ): Effect.Effect<UserIssuesSearchResult, LayerErrors, Octokit> =>
     tapLayer(Context, ({ searchUserIssues }) =>
-      searchUserIssues({ username, query, fetchOnlyFirstPage, concurrency }),
+      searchUserIssues({
+        username,
+        type,
+        query,
+        fetchOnlyFirstPage,
+        concurrency,
+      }),
     ),
   getCommitsCount: (): Effect.Effect<
     UserCommitsCountResult,
