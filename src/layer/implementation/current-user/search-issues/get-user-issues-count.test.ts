@@ -20,6 +20,7 @@ describe('getUserIssuesCount effect', () => {
   const count = 2000;
   const args: GetUserIssuesCountArgs = {
     username: 'cool',
+    type: 'all',
   };
 
   beforeEach(() => {

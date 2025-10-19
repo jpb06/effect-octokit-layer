@@ -20,6 +20,7 @@ vi.mock('@octokit/core');
 describe('searchUserIssuesPage effect', () => {
   const args: SearchUserIssuesPageArgs = {
     username: 'cool',
+    type: 'all',
     query: '',
     page: 1,
     perPage: 1,

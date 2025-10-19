@@ -9,13 +9,14 @@ import {
 } from '@tests/mock-data';
 import { octokitMock } from '@tests/mocks';
 
-import type { SearchUserIssuesArgs } from './search-user-issues.js';
+import type { SearchUserIssuesAggregatorArgs } from './search-user-issues.js';
 
 vi.mock('@octokit/core');
 
 describe('searchUserIssues effect', () => {
-  const args: SearchUserIssuesArgs = {
+  const args: SearchUserIssuesAggregatorArgs = {
     username: 'cool',
+    type: 'all',
     query: '',
   };
 

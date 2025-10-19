@@ -90,14 +90,14 @@ const [
         octokitUser.events(),
         // Search in user commits (1000 results max)
         octokitUser.searchCommits(''),
-        // Search in user issues (1000 results max)
-        octokitUser.searchIssues(''),
+        // Search in user issues (all, issue or pr) (1000 results max)
+        octokitUser.searchIssues('pr', ''),
         // Search in user merged pull requests (1000 results max)
         octokitUser.searchPullRequests('merged', ''),
         // Get entities count
         octokitUser.getPullRequestsCount('draft'),
         octokitUser.getCommitsCount(),
-        octokitUser.getIssuesCount(),
+        octokitUser.getIssuesCount('pr'),
       ],
       // Fetch all these in parallel
       { concurrency: 'unbounded' }

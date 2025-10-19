@@ -47,7 +47,7 @@ import type {
   RepoReleasesResult,
   RepoTagsResult,
   SearchUserCommitsArgs,
-  SearchUserIssuesArgs,
+  SearchUserIssuesAggregatorArgs,
   SearchUserPullRequestsArgs,
   UserCommitsCountResult,
   UserCommitsSearchResult,
@@ -80,7 +80,7 @@ export interface Octokit {
     args: SearchUserCommitsArgs,
   ) => Effect.Effect<UserCommitsSearchResult, LayerErrors, never>;
   readonly searchUserIssues: (
-    args: SearchUserIssuesArgs,
+    args: SearchUserIssuesAggregatorArgs,
   ) => Effect.Effect<UserIssuesSearchResult, LayerErrors, never>;
   readonly searchUserPullRequests: (
     args: SearchUserPullRequestsArgs,

@@ -29,6 +29,7 @@ import type {
   UserEventsResult,
   UserIssuesCountResult,
   UserIssuesSearchResult,
+  UserIssuesType,
   UserOrgsResult,
   UserProfileResult,
   UserPullRequestsCountResult,
@@ -86,6 +87,7 @@ export type {
   UserPullRequestsCountResult,
   SortDirection,
   IssueState,
+  UserIssuesType,
 };
 
 export * from './layer/errors/api-rate-limit.error.js';
