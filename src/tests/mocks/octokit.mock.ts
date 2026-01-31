@@ -1,80 +1,63 @@
 import { Octokit } from '@octokit/core';
-import type { RequestInterface } from '@octokit/types';
 import { vi } from 'vitest';
 
 export const octokitMock = {
   requestOnce: (data: unknown) => {
     const requestMock = vi.fn();
 
-    vi.mocked(Octokit).mockImplementationOnce(
-      () =>
-        ({
-          request: requestMock.mockResolvedValueOnce(
-            data,
-          ) as unknown as RequestInterface<object>,
-        }) as Octokit,
-    );
+    vi.mocked(Octokit).mockImplementationOnce(function mock() {
+      return {
+        request: requestMock.mockResolvedValueOnce(data),
+      };
+    });
 
     return requestMock;
   },
   request: (data: unknown) => {
     const requestMock = vi.fn();
 
-    vi.mocked(Octokit).mockImplementation(
-      () =>
-        ({
-          request: requestMock.mockResolvedValueOnce(
-            data,
-          ) as unknown as RequestInterface<object>,
-        }) as Octokit,
-    );
+    vi.mocked(Octokit).mockImplementation(function mock() {
+      return {
+        request: requestMock.mockResolvedValueOnce(data),
+      };
+    });
 
     return requestMock;
   },
-  // biome-ignore lint/suspicious/noExplicitAny: /
-  requestFail: (error: any) => {
+  requestFail: (error: unknown) => {
     const requestMock = vi.fn();
 
-    vi.mocked(Octokit).mockImplementation(
-      () =>
-        ({
-          request: requestMock.mockRejectedValue(
-            error,
-          ) as unknown as RequestInterface<object>,
-        }) as Octokit,
-    );
+    vi.mocked(Octokit).mockImplementation(function mock() {
+      return {
+        request: requestMock.mockRejectedValue(error),
+      };
+    });
 
     return requestMock;
   },
-  // biome-ignore lint/suspicious/noExplicitAny: /
-  requestSucceedAndFail: (error: any, data: unknown) => {
+  requestSucceedAndFail: (error: unknown, data: unknown) => {
     const requestMock = vi.fn();
 
-    vi.mocked(Octokit).mockImplementation(
-      () =>
-        ({
-          request: requestMock
-            .mockResolvedValueOnce(data)
-            .mockRejectedValueOnce(
-              error,
-            ) as unknown as RequestInterface<object>,
-        }) as Octokit,
-    );
+    vi.mocked(Octokit).mockImplementation(function mock() {
+      return {
+        request: requestMock
+          .mockResolvedValueOnce(data)
+          .mockRejectedValueOnce(error),
+      };
+    });
 
     return requestMock;
   },
-  // biome-ignore lint/suspicious/noExplicitAny: /
-  requestFailAndThenSucceed: (error: any, data: unknown) => {
+  requestFailAndThenSucceed: (error: unknown, data: unknown) => {
     const requestMock = vi.fn();
 
-    vi.mocked(Octokit).mockImplementation(
-      () =>
-        ({
-          request: requestMock
-            .mockRejectedValueOnce(error)
-            .mockResolvedValueOnce(data) as unknown as RequestInterface<object>,
-        }) as Octokit,
-    );
+    vi.mocked(Octokit).mockImplementation(function mock() {
+      return {
+        request: requestMock
+          .mockRejectedValueOnce(error)
+          .mockResolvedValueOnce(data),
+      };
+    });
 
     return requestMock;
   },
