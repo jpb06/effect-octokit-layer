@@ -64,7 +64,7 @@
     "effect": "3.x"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.4.7",
+    "@biomejs/biome": "2.4.8",
     "@types/bun": "latest",
     "@types/node": "25.5.0",
     "@vitest/coverage-v8": "4.1.0",
